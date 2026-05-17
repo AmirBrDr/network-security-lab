@@ -15,3 +15,7 @@
 | System | Role |
 | --- | --- |
 | MacBook M3 Pro 18 GB | Ollama / local LLM inference |
+
+## Topology
+
+![Network security lab topology](images/topology.svg)
