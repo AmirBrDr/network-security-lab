@@ -12,4 +12,4 @@ It combines:
 
 ## Topology
 
-![Network security lab topology](images/topology.svg)
+![Network security lab topology](docs/images/topology.svg)
