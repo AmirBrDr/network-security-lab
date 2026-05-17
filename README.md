@@ -9,3 +9,7 @@ It combines:
 - IDS analysis with Suricata or Zeek
 - local LLM inference on Apple Silicon
 - RAG over networking and cybersecurity documentation
+
+## Topology
+
+![Network security lab topology](images/topology.svg)
