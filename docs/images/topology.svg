@@ -32,6 +32,9 @@
       .purple { fill: #5b3fb4; }
       .muted { fill: #777777; }
       .pill { fill: #f1f1f1; stroke: #cccccc; stroke-width: 2; }
+      .area-pill { fill: #ffffff; stroke: #111111; stroke-width: 2; }
+      .area-text { font: 700 18px Arial, Helvetica, sans-serif; fill: #111111; }
+      .stub-text { font: 700 17px Arial, Helvetica, sans-serif; fill: #007a2b; }
     </style>
   </defs>
 
@@ -76,6 +79,7 @@
     <text class="tiny" x="633" y="421">tap62</text>
     <text class="label green" x="145" y="468">R1 Container VLAN</text>
     <rect class="vlan" x="120" y="485" width="460" height="185" rx="3" />
+    <text class="stub-text" x="430" y="512">Area 10 stub</text>
     <rect class="device" x="150" y="508" width="230" height="46" rx="3" />
     <rect class="device" x="150" y="562" width="230" height="46" rx="3" />
     <rect class="device" x="150" y="616" width="230" height="46" rx="3" />
@@ -101,6 +105,7 @@
     <text class="label" x="951" y="440">R2</text>
     <text class="label green" x="1088" y="333">R2 Container VLAN</text>
     <rect class="vlan" x="1030" y="350" width="420" height="185" rx="3" />
+    <text class="stub-text" x="1048" y="377">Area 20 stub</text>
     <rect class="device" x="1080" y="390" width="95" height="78" rx="3" />
     <text class="label" x="1105" y="438">SW</text>
     <path class="link" d="M 1018 430 L 1080 430" />
@@ -124,6 +129,7 @@
     <text class="label" x="951" y="780">R3</text>
     <text class="label green" x="1088" y="673">R3 Container VLAN</text>
     <rect class="vlan" x="1030" y="690" width="420" height="185" rx="3" />
+    <text class="stub-text" x="1048" y="717">Area 30 stub</text>
     <rect class="device" x="1080" y="730" width="95" height="78" rx="3" />
     <text class="label" x="1105" y="778">SW</text>
     <path class="link" d="M 1018 770 L 1080 770" />
@@ -136,6 +142,15 @@
     <path class="link" d="M 1175 745 L 1245 731" />
     <path class="link" d="M 1175 770 L 1245 785" />
     <path class="link" d="M 1175 795 L 1245 839" />
+  </g>
+
+  <g id="ospf-areas">
+    <rect class="area-pill" x="745" y="478" width="130" height="30" rx="4" />
+    <text class="area-text" x="761" y="499">OSPF Area 0</text>
+    <rect class="area-pill" x="745" y="662" width="130" height="30" rx="4" />
+    <text class="area-text" x="761" y="683">OSPF Area 0</text>
+    <rect class="area-pill" x="895" y="552" width="130" height="30" rx="4" />
+    <text class="area-text" x="911" y="573">OSPF Area 0</text>
   </g>
 
   <g id="monitoring-vm">
