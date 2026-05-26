@@ -64,7 +64,7 @@ Goal: prepare everything needed before changing the infrastructure.
 | Date | Estimated workload | Goal | Actions | Deliverable |
 | --- | ---: | --- | --- | --- |
 | Sunday, May 24, 2026 | 2h30 | Scope, repository, and tracker | Review the OSPF lab, `README.md`, `architecture.md`, `tap-plan.md`, and `server-resources.md`. Define the final project scope. Initialize or verify GitHub. Create a Kanban board, Notion page, or roadmap tracker with project labels. | Validated scope, GitHub repository, and project tracker. |
-| Monday, May 25, 2026 | 2h | Architecture and TAPs | Finalize the architecture diagram. Confirm `tap62` to `tap66`. Send the professor a request for extra TAPs `tap67`, `tap68`, and `tap69` if needed. | Final architecture and confirmed or requested TAP allocation. |
+| Monday, May 25, 2026 | 2h | Architecture and TAPs | Finalize the architecture diagram. | Final architecture and confirmed or requested TAP allocation. |
 | Tuesday, May 26, 2026 | 4h | VM templates, communication, and AI stack | Prepare router, monitoring, and management VM templates. Install base tools. Test Mac <-> university server communication. Choose the AI stack: Ollama, Qwen, DeepSeek, embeddings, FastAPI. | VM templates ready, communication validated, AI stack selected. |
 
 Phase deliverables:
