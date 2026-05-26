@@ -128,10 +128,3 @@ Controlled scans, suspicious traffic, and brute-force simulations are only perfo
 - [AI stack](docs/ai-stack.md)
 - [OSPF lab reference](docs/ospf-lab.txt)
 
-## Portfolio Story
-
-I built a virtual OSPF routing lab and extended it into a network security observability platform with monitoring, IDS alerts, incident evidence, and local AI-assisted troubleshooting.
-
-Suggested resume summary:
-
-- Built a virtual OSPFv2/OSPFv3 network security lab with FRRouting, VLAN/TAP topology, Prometheus, Grafana, Loki, Suricata, and local Ollama-based troubleshooting support.
