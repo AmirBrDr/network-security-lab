@@ -1,0 +1,26 @@
+ovs:
+  switches:
+    - name: dsw-host
+      ports:
+        - name: tap62 # R1 switch port
+          type: OVSPort
+          vlan_mode: trunk
+          trunks: [10, 99, 360, 440, 441]
+        - name: tap63 # R2 switch port
+          type: OVSPort
+          vlan_mode: trunk
+          trunks: [20, 52, 99, 440, 442] # VLAN 52 provides Internet temporary access
+#         trunks: [20, 99, 440, 442]
+        - name: tap64 # R3 switch port
+          type: OVSPort
+          vlan_mode: trunk
+          trunks: [30, 52, 99, 441, 442] # VLAN 52 provides Internet temporary access
+#         trunks: [30, 99, 441, 442]
+        - name: tap65 # Monitoring / IDS management port
+          type: OVSPort
+          vlan_mode: access
+          tag: 99
+        - name: tap66 # Management / observability port
+          type: OVSPort
+          vlan_mode: access
+          tag: 99

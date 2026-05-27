@@ -122,6 +122,7 @@ Controlled scans, suspicious traffic, and brute-force simulations are only perfo
 
 - [Project roadmap](docs/roadmap.md)
 - [Project calendar](docs/project-calendar.md)
+- [Addressing plan](docs/addressing-plan.md)
 - [Architecture](docs/architecture.md)
 - [TAP plan](docs/tap-plan.md)
 - [Server resources](docs/server-resources.md)

@@ -1,0 +1,12 @@
+ovs:
+  switches:
+    - name: dsw-host
+      ports:
+        - name: tap62 # Temporary VLAN 360 internet/uplink test port
+          type: OVSPort
+          vlan_mode: access
+          tag: 360
+        - name: tap63 # Temporary VLAN 52 DHCP internet test port
+          type: OVSPort
+          vlan_mode: access
+          tag: 52
