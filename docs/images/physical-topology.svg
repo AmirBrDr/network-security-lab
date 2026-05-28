@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2380" height="1110" viewBox="-420 115 2380 1110" role="img" aria-labelledby="title desc">
+  <title id="title">Network Security Lab Physical Topology</title>
+  <desc id="desc">Physical-style lab topology showing the type 2 hypervisor, Open vSwitch bridge, router VMs, monitoring and management VMs, VLAN 99 management access, and the MacBook Pro connected to infrastructure VLAN 360.</desc>
+  <defs>
+    <style>
+      .canvas { fill: #ffffff; }
+      .frame { fill: #ffffff; stroke: #b7b7b7; stroke-width: 4; stroke-dasharray: 14 10; }
+      .vm { fill: #ffffff; stroke: #b8b8b8; stroke-width: 4; stroke-dasharray: 11 8; }
+      .vlan-box { fill: #f7fff9; stroke: #00a63f; stroke-width: 4; }
+      .mgmt-box { fill: #fffaf0; stroke: #d18a00; stroke-width: 4; }
+      .monitor-box { fill: #f7fbff; stroke: #1d75bc; stroke-width: 4; }
+      .device { fill: #ffffff; stroke: #1f1f1f; stroke-width: 4; }
+      .router { fill: #ffffff; stroke: #111111; stroke-width: 4; }
+      .switch { fill: #f8f8f8; stroke: #222222; stroke-width: 4; }
+      .port { fill: #ffffff; stroke: #333333; stroke-width: 3; }
+      .cable { fill: none; stroke: #111111; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .trunk { fill: none; stroke: #111111; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+      .infra-line { fill: none; stroke: #d92626; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .mgmt-line { fill: none; stroke: #d18a00; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .v440 { fill: none; stroke: #7d4ed8; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .v441 { fill: none; stroke: #159bd3; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .v442 { fill: none; stroke: #ff8a1c; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .dash { stroke-dasharray: 12 9; }
+      .title { font: 700 38px Arial, Helvetica, sans-serif; fill: #222222; }
+      .section-title { font: 700 28px Arial, Helvetica, sans-serif; fill: #333333; }
+      .label { font: 600 23px Arial, Helvetica, sans-serif; fill: #333333; }
+      .small { font: 500 20px Arial, Helvetica, sans-serif; fill: #333333; }
+      .tiny { font: 600 17px Arial, Helvetica, sans-serif; fill: #333333; }
+      .micro { font: 600 14px Arial, Helvetica, sans-serif; fill: #333333; }
+      .muted { fill: #777777; }
+      .green { fill: #009a36; }
+      .red { fill: #b52020; }
+      .amber { fill: #a66300; }
+      .blue { fill: #1d75bc; }
+      .purple { fill: #6b42c8; }
+      .orange { fill: #d96f00; }
+      .port-tag { fill: #222222; }
+      .port-text { font: 700 16px Arial, Helvetica, sans-serif; fill: #ffffff; }
+      .icon-stroke { fill: none; stroke: #111111; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+
+    <g id="router-glyph">
+      <circle class="router" cx="0" cy="0" r="44" />
+      <path class="icon-stroke" d="M 0 -6 L 0 -31 M -11 -20 L 0 -31 L 11 -20" />
+      <path class="icon-stroke" d="M 0 6 L 0 31 M -11 20 L 0 31 L 11 20" />
+      <path class="icon-stroke" d="M -6 0 L -31 0 M -20 -11 L -31 0 L -20 11" />
+      <path class="icon-stroke" d="M 6 0 L 31 0 M 20 -11 L 31 0 L 20 11" />
+    </g>
+
+    <g id="switch-glyph">
+      <path class="icon-stroke" d="M 24 -16 L -24 -16 M -10 -29 L -24 -16 L -10 -3" />
+      <path class="icon-stroke" d="M -24 16 L 24 16 M 10 3 L 24 16 L 10 29" />
+    </g>
+  </defs>
+
+  <rect class="canvas" x="-420" y="115" width="2380" height="1110" />
+
+  <rect class="frame" x="120" y="130" width="1740" height="1070" rx="12" />
+  <text class="section-title muted" x="155" y="178">Type 2 Hypervisor / University Server</text>
+  <text class="small muted" x="155" y="208">Type 2 virtualization with TAP interfaces tap62 to tap66 connected to dsw-host</text>
+
+  <g id="router1-vm" transform="translate(230 230)">
+    <rect class="vm" x="0" y="0" width="420" height="440" rx="10" />
+    <text class="section-title muted" x="28" y="42">Router1 VM</text>
+    <text class="label green" x="58" y="74">Container VLAN 10</text>
+    <rect class="vlan-box" x="32" y="88" width="356" height="170" rx="4" />
+    <rect class="device" x="58" y="112" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="158" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="204" width="160" height="38" rx="3" />
+    <text class="tiny" x="83" y="137">Container0</text>
+    <text class="tiny" x="83" y="183">Container1</text>
+    <text class="tiny" x="83" y="229">Container2</text>
+    <rect class="device" x="266" y="122" width="80" height="88" rx="3" />
+    <use href="#switch-glyph" transform="translate(306 166)" />
+    <path class="cable" d="M 218 131 L 266 145 M 218 177 L 266 177 M 218 223 L 266 195" />
+    <path class="cable" d="M 306 210 C 286 238 252 247 225 265" />
+    <use href="#router-glyph" transform="translate(210 305)" />
+    <rect class="port-tag" x="162" y="356" width="96" height="30" rx="4" />
+    <text class="port-text" x="179" y="377">enp0s1</text>
+    <path class="trunk" d="M 210 349 L 210 356 M 210 386 L 210 630" />
+  </g>
+
+  <g id="router2-vm" transform="translate(820 230)">
+    <rect class="vm" x="0" y="0" width="420" height="440" rx="10" />
+    <text class="section-title muted" x="28" y="42">Router2 VM</text>
+    <text class="label green" x="58" y="74">Container VLAN 20</text>
+    <rect class="vlan-box" x="32" y="88" width="356" height="170" rx="4" />
+    <rect class="device" x="58" y="112" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="158" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="204" width="160" height="38" rx="3" />
+    <text class="tiny" x="83" y="137">Container0</text>
+    <text class="tiny" x="83" y="183">Container1</text>
+    <text class="tiny" x="83" y="229">Container2</text>
+    <rect class="device" x="266" y="122" width="80" height="88" rx="3" />
+    <use href="#switch-glyph" transform="translate(306 166)" />
+    <path class="cable" d="M 218 131 L 266 145 M 218 177 L 266 177 M 218 223 L 266 195" />
+    <path class="cable" d="M 306 210 C 286 238 252 247 225 265" />
+    <use href="#router-glyph" transform="translate(210 305)" />
+    <rect class="port-tag" x="162" y="356" width="96" height="30" rx="4" />
+    <text class="port-text" x="179" y="377">enp0s1</text>
+    <path class="trunk" d="M 210 349 L 210 356 M 210 386 L 210 630" />
+  </g>
+
+  <g id="router3-vm" transform="translate(1410 230)">
+    <rect class="vm" x="0" y="0" width="420" height="440" rx="10" />
+    <text class="section-title muted" x="28" y="42">Router3 VM</text>
+    <text class="label green" x="58" y="74">Container VLAN 30</text>
+    <rect class="vlan-box" x="32" y="88" width="356" height="170" rx="4" />
+    <rect class="device" x="58" y="112" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="158" width="160" height="38" rx="3" />
+    <rect class="device" x="58" y="204" width="160" height="38" rx="3" />
+    <text class="tiny" x="83" y="137">Container0</text>
+    <text class="tiny" x="83" y="183">Container1</text>
+    <text class="tiny" x="83" y="229">Container2</text>
+    <rect class="device" x="266" y="122" width="80" height="88" rx="3" />
+    <use href="#switch-glyph" transform="translate(306 166)" />
+    <path class="cable" d="M 218 131 L 266 145 M 218 177 L 266 177 M 218 223 L 266 195" />
+    <path class="cable" d="M 306 210 C 286 238 252 247 225 265" />
+    <use href="#router-glyph" transform="translate(210 305)" />
+    <rect class="port-tag" x="162" y="356" width="96" height="30" rx="4" />
+    <text class="port-text" x="179" y="377">enp0s1</text>
+    <path class="trunk" d="M 210 349 L 210 356 M 210 386 L 210 630" />
+  </g>
+
+  <g id="monitoring-vm">
+    <rect class="vm" x="530" y="700" width="340" height="145" rx="10" />
+    <text class="section-title muted" x="558" y="738">Monitoring VM</text>
+    <rect class="monitor-box" x="558" y="756" width="284" height="58" rx="4" />
+    <rect class="device" x="578" y="770" width="86" height="30" rx="3" />
+    <rect class="device" x="691" y="770" width="126" height="30" rx="3" />
+    <text class="micro" x="601" y="790">IDS</text>
+    <text class="micro" x="709" y="790">Packet tap</text>
+    <text class="tiny blue" x="585" y="835">tap65 access VLAN 99</text>
+    <path class="mgmt-line" d="M 700 845 L 700 860" />
+  </g>
+
+  <g id="management-vm">
+    <rect class="vm" x="1130" y="700" width="380" height="145" rx="10" />
+    <text class="section-title muted" x="1158" y="738">Management VM</text>
+    <rect class="mgmt-box" x="1158" y="756" width="324" height="58" rx="4" />
+    <rect class="device" x="1178" y="770" width="86" height="30" rx="3" />
+    <rect class="device" x="1285" y="770" width="74" height="30" rx="3" />
+    <rect class="device" x="1380" y="770" width="82" height="30" rx="3" />
+    <text class="micro" x="1192" y="790">Grafana</text>
+    <text class="micro" x="1303" y="790">Logs</text>
+    <text class="micro" x="1397" y="790">API</text>
+    <text class="tiny amber" x="1184" y="835">tap66 access VLAN 99</text>
+    <path class="mgmt-line" d="M 1320 845 L 1320 860" />
+  </g>
+
+  <g id="dsw-host">
+    <rect class="switch" x="240" y="860" width="1500" height="215" rx="4" />
+
+    <rect class="port" x="402" y="842" width="76" height="42" rx="3" />
+    <rect class="port" x="662" y="842" width="76" height="42" rx="3" />
+    <rect class="port" x="992" y="842" width="76" height="42" rx="3" />
+    <rect class="port" x="1282" y="842" width="76" height="42" rx="3" />
+    <rect class="port" x="1582" y="842" width="76" height="42" rx="3" />
+
+    <text class="micro" x="416" y="868">tap62</text>
+    <text class="micro" x="676" y="868">tap65</text>
+    <text class="micro" x="1006" y="868">tap63</text>
+    <text class="micro" x="1296" y="868">tap66</text>
+    <text class="micro" x="1596" y="868">tap64</text>
+
+    <text class="micro muted" x="390" y="1110">trunk tap62: 10, 99, 360, 440, 441</text>
+    <text class="micro muted" x="925" y="1110">trunk tap63: 20, 28, 99, 440, 442</text>
+    <text class="micro muted" x="1382" y="1110">trunk tap64: 30, 28, 99, 441, 442</text>
+    <text class="micro muted" x="615" y="1134">tap65 access 99</text>
+    <text class="micro muted" x="1234" y="1134">tap66 access 99</text>
+
+    <path class="infra-line" d="M 254 902 L 418 902 L 418 884" />
+    <text class="tiny red" x="490" y="904">VLAN 360</text>
+
+    <path class="mgmt-line" d="M 434 920 L 700 920 L 1028 920 L 1320 920 L 1618 920" />
+    <path class="mgmt-line" d="M 434 884 L 434 920 M 700 884 L 700 920 M 1028 884 L 1028 920 M 1320 884 L 1320 920 M 1618 884 L 1618 920" />
+    <text class="tiny amber" x="760" y="914">Management VLAN 99</text>
+
+    <path class="v440" d="M 454 962 L 1014 962" />
+    <path class="v440" d="M 454 884 L 454 962 M 1014 884 L 1014 962" />
+    <text class="tiny purple" x="625" y="956">VLAN 440 / R1 &lt;-&gt; R2</text>
+
+    <path class="v441" d="M 470 1004 L 1604 1004" />
+    <path class="v441" d="M 470 884 L 470 1004 M 1604 884 L 1604 1004" />
+    <text class="tiny blue" x="765" y="998">VLAN 441 / R1 &lt;-&gt; R3</text>
+
+    <path class="v442" d="M 1044 1046 L 1634 1046" />
+    <path class="v442" d="M 1044 884 L 1044 1046 M 1634 884 L 1634 1046" />
+    <text class="tiny orange" x="1195" y="1040">VLAN 442 / R2 &lt;-&gt; R3</text>
+
+    <rect class="device" x="252" y="1000" width="205" height="62" rx="5" />
+    <text class="section-title muted" x="259" y="1030">dsw-host</text>
+    <text class="tiny muted" x="259" y="1050">Open vSwitch bridge</text>
+  </g>
+
+  <g id="infrastructure-side">
+    <text class="label red" x="5" y="770">Infrastructure VLAN 360</text>
+    <text class="tiny muted" x="5" y="798">upstream/default route side</text>
+    <use href="#router-glyph" transform="translate(74 902)" />
+    <path class="infra-line" d="M 118 902 L 250 902" />
+    <path class="infra-line dash" d="M 164 836 C 182 860 182 940 164 970" />
+  </g>
+
+  <g id="macbook-pro">
+    <text class="title" x="-360" y="200">Network Security Lab</text>
+    <text class="title" x="-360" y="245">Physical Topology</text>
+    <text class="section-title muted" x="-360" y="762">MacBook Pro</text>
+    <text class="tiny red" x="-360" y="790">connected to infrastructure VLAN 360</text>
+    <path class="infra-line" d="M -100 902 L 30 902" />
+    <rect class="device" x="-360" y="818" width="230" height="142" rx="9" />
+    <rect x="-341" y="838" width="192" height="98" rx="5" fill="#f7fbff" stroke="#1d75bc" stroke-width="3" />
+    <rect class="device" x="-383" y="960" width="276" height="32" rx="6" />
+    <text class="small" x="-325" y="879">Ollama /</text>
+    <text class="small" x="-325" y="906">Local LLM</text>
+    <text class="tiny muted" x="-336" y="1025">infrastructure access host</text>
+  </g>
+
+  <g id="dsw-host-left-switch">
+    <rect class="device" x="200" y="864" width="104" height="76" rx="4" />
+    <use href="#switch-glyph" transform="translate(250 902)" />
+  </g>
+</svg>

@@ -29,6 +29,10 @@ The AI layer is not the core of the project. The foundation is the network: OSPF
 
 ![Network security lab topology](docs/images/topology.svg)
 
+## Physical Topology 
+![Network security lab physical topology](docs/images/physical-topology.svg)
+
+
 The initial topology uses three routers in an OSPF triangle:
 
 | Node | Role | TAP |

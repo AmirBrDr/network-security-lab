@@ -1,0 +1,32 @@
+kvm:
+  vms:
+    - vm_name: R1
+      os: linux
+      master_image: debian-testing-amd64.qcow2 # master image to be used
+      force_copy: false # do not force copy the master image to the VM image
+      memory: 4096
+      tapnum: 62
+    - vm_name: R2
+      os: linux
+      master_image: debian-testing-amd64.qcow2 # master image to be used
+      force_copy: false # do not force copy the master image to the VM image
+      memory: 4096
+      tapnum: 63
+    - vm_name: R3
+      os: linux
+      master_image: debian-testing-amd64.qcow2 # master image to be used
+      force_copy: false # do not force copy the master image to the VM image
+      memory: 4096
+      tapnum: 64
+    - vm_name: monitoring
+      os: linux
+      master_image: debian-testing-amd64.qcow2 # master image to be used
+      force_copy: false # do not force copy the master image to the VM image
+      memory: 12288
+      tapnum: 65
+    - vm_name: management
+      os: linux
+      master_image: debian-testing-amd64.qcow2 # master image to be used
+      force_copy: false # do not force copy the master image to the VM image
+      memory: 12288
+      tapnum: 66
