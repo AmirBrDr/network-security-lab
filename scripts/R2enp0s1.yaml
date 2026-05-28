@@ -1,0 +1,41 @@
+network:
+    version: 2
+    ethernets:
+      enp0s1:
+        dhcp4: false
+        dhcp6: false
+        accept-ra: false
+        nameservers:
+          addresses:
+            - 172.16.0.2
+            - 2001:678:3fc:3::2
+
+    vlans:
+      # Temporary Internet access
+      enp0s1.28:
+        id: 28
+        link: enp0s1
+        dhcp4: true
+        dhcp6: false
+        accept-ra: true
+      # R2 -> R1
+      enp0s1.440:
+        id: 440
+        link: enp0s1
+        addresses:
+          - 10.44.0.2/29
+          - fe80::1b8:2/64
+      # R2 -> R3
+      enp0s1.442:
+        id: 442
+        link: enp0s1
+        addresses:
+          - 10.44.2.2/29
+          - fe80::1ba:2/64
+      # management
+      enp0s1.99:
+        id: 99
+        link: enp0s1
+        addresses:
+          - 10.99.0.2/24
+          - fd14:ca46:3864:99::2/64
