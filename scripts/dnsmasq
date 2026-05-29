@@ -1,0 +1,20 @@
+cat << EOF | sudo tee /etc/dnsmasq.conf
+# Specify Container VLAN interface
+interface=vlan30
+
+# Enable DHCPv4 on Container VLAN
+dhcp-range=10.30.0.20,10.30.0.200,3h
+
+# Enable IPv6 router advertisements
+enable-ra
+
+# Enable SLAAC
+dhcp-range=::,constructor:vlan30,ra-names,slaac
+
+# Optional: Specify DNS servers
+dhcp-option=option:dns-server,172.16.0.2,9.9.9.9
+dhcp-option=option6:dns-server,[2001:678:3fc:3::2],[2620:fe::fe]
+
+# Avoid DNS listen port conflict between dnsmasq and systemd-resolved
+port=0
+EOF

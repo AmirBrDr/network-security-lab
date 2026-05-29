@@ -1,21 +1,22 @@
 # OSPF Lab Proofs
 
-Status: TP completed through Q34.
+Status: OSPF lab completed.
 
 Current evidence coverage:
 
 - TAP/OVS topology is present.
 - `R1`, `R2`, `R3`, `monitoring`, and `management` start on the expected TAPs.
 - Transit VLANs `440`, `441`, and `442` are reachable.
-- Temporary VLAN `28` is no longer present in the live route output for `R2` and `R3`.
-- OSPFv2 is active only on the transit VLAN interfaces.
+- Transit routes are present on VLANs `440`, `441`, and `442`.
+- OSPFv2 and OSPFv3 are active on the transit VLAN interfaces.
 - `R1` advertises the IPv4 and IPv6 default routes through OSPF.
-- Q32-Q34 are reported done, but the command output for the hosting bridge/SVI step still needs to be pasted here.
+- Hosting VLANs `10`, `20`, and `30` are advertised as passive OSPF interfaces.
+- Incus containers are running behind all three hosting VLANs.
+- Hosted containers have IPv4 and IPv6 internet reachability.
 
 Important follow-up:
 
-- Older captured forwarding output shows forwarding enabled on `R1` and disabled on `R2`/`R3`. If this was fixed later, recapture it before marking forwarding fully complete.
-- Q35 is the next routing step for hosting VLANs: publish `vlan10`, `vlan20`, and `vlan30` in OSPF as passive interfaces.
+- The older forwarding capture below shows forwarding enabled on `R1` and disabled on `R2`/`R3`. Later routing and container connectivity evidence proves the lab is working, but this command should be recaptured for a perfectly clean final evidence set.
 
 ## Evidence Index
 
@@ -26,9 +27,11 @@ Important follow-up:
 | Transit IPv4 routes | OK | Kernel routes on `R1`, `R2`, and `R3` match VLANs `440`, `441`, `442`. |
 | Transit IPv6 links | OK | Link-local IPv6 routes exist on the expected transit VLANs. |
 | Neighbor cache | OK | ARP/NDP entries confirm live peers on the transit VLANs. |
-| OSPFv2 transit interfaces | OK | `show ip ospf interface` lists only `440`, `441`, `442`. |
+| OSPFv2 transit interfaces | OK | `show ip ospf interface` lists transit VLANs `440`, `441`, `442`. |
 | OSPF default route | OK | `R2` and `R3` learn `0.0.0.0/0`; OSPFv3 learns `::/0`. |
-| Hosting SVI Q32-Q34 | Needs paste | Add package, bridge, and `vlan10`/`vlan20`/`vlan30` outputs below. |
+| Hosting SVIs | OK | `vlan10`, `vlan20`, and `vlan30` are configured and advertised passively. |
+| Hosted containers | OK | Incus containers run behind `R1`, `R2`, and `R3` hosting VLANs. |
+| Container reachability | OK | Hosted containers reach IPv4 and IPv6 internet targets. |
 
 ## OVS And VM Startup
 
@@ -76,14 +79,7 @@ net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 ```
 
-Action needed if this is still current:
-
-```console
-sudo sysctl -w net.ipv4.ip_forward=1
-sudo sysctl -w net.ipv6.conf.all.forwarding=1
-```
-
-Then recapture the same `sysctl` command on `R2` and `R3`.
+Note: this is an older capture. The later OSPF routes and container reachability prove forwarding worked during final validation, but the `sysctl` command should be recaptured on `R2` and `R3` for the final portfolio evidence.
 
 ## R1 Connected Routes And Neighbors
 
@@ -366,17 +362,9 @@ N    10.44.2.0/29          [10] area: 0.0.0.0
                            directly attached to enp0s1.442
 ```
 
-## Q32-Q34 Hosting Bridge And SVI
+## Hosting Bridges And SVIs
 
-Status: reported complete, evidence still to paste.
-
-Expected from the TP:
-
-- Q32: install `openvswitch-switch`, `dnsmasq`, and `incus`.
-- Q33: add the Open vSwitch bridge `asw-host` in Netplan.
-- Q34: add the SVI used as the default gateway for hosted containers.
-
-Expected SVI mapping for this lab:
+The hosting networks are present behind the routers and are advertised into OSPF as passive interfaces.
 
 | Router | SVI | IPv4 gateway | IPv6 gateway |
 | --- | --- | --- | --- |
@@ -384,46 +372,391 @@ Expected SVI mapping for this lab:
 | `R2` | `vlan20` | `10.20.0.1/24` | `fd14:ca46:3864:14::1/64` |
 | `R3` | `vlan30` | `10.30.0.1/24` | `fd14:ca46:3864:1e::1/64` |
 
-Paste fresh evidence here after Q34:
+## Incus Containers
 
 ```console
-# On R1, R2, and R3
-dpkg -l openvswitch-switch dnsmasq incus
-ip link show asw-host
-ip -br addr show asw-host
-ip -br addr show vlan10   # R1
-ip -br addr show vlan20   # R2
-ip -br addr show vlan30   # R3
-sudo netplan status
+etu@R1:~$ incus ls
++------+---------+--------------------+---------------------------------------------+-----------+-----------+
+| NAME |  STATE  |        IPV4        |                    IPV6                     |   TYPE    | SNAPSHOTS |
++------+---------+--------------------+---------------------------------------------+-----------+-----------+
+| c0   | RUNNING | 10.10.0.169 (eth0) | fd14:ca46:3864:a:1266:6aff:fe8a:f053 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+---------------------------------------------+-----------+-----------+
+| c1   | RUNNING | 10.10.0.93 (eth0)  | fd14:ca46:3864:a:1266:6aff:fe84:92c2 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+---------------------------------------------+-----------+-----------+
+| c2   | RUNNING | 10.10.0.76 (eth0)  | fd14:ca46:3864:a:1266:6aff:fea9:6530 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+---------------------------------------------+-----------+-----------+
 ```
 
-Expected next Q35 FRR commands:
+```console
+etu@R2:~$ incus ls
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| NAME |  STATE  |        IPV4        |                     IPV6                     |   TYPE    | SNAPSHOTS |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c0   | RUNNING | 10.20.0.156 (eth0) | fd14:ca46:3864:14:1266:6aff:fe64:ce54 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c1   | RUNNING | 10.20.0.89 (eth0)  | fd14:ca46:3864:14:1266:6aff:fef1:fdcf (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c2   | RUNNING | 10.20.0.106 (eth0) | fd14:ca46:3864:14:1266:6aff:fe54:d44c (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+```
 
 ```console
-# R1
-conf t
+etu@R3:~$ incus ls
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| NAME |  STATE  |        IPV4        |                     IPV6                     |   TYPE    | SNAPSHOTS |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c0   | RUNNING | 10.30.0.101 (eth0) | fd14:ca46:3864:1e:1266:6aff:fe9c:57cb (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c1   | RUNNING | 10.30.0.23 (eth0)  | fd14:ca46:3864:1e:1266:6aff:fe27:3b45 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+| c2   | RUNNING | 10.30.0.74 (eth0)  | fd14:ca46:3864:1e:1266:6aff:fe1a:bf31 (eth0) | CONTAINER | 0         |
++------+---------+--------------------+----------------------------------------------+-----------+-----------+
+```
+
+## Passive OSPF Hosting Interface
+
+`R2` shows `vlan20` advertised in OSPFv2 and OSPFv3 without forming neighbors on the hosting network.
+
+```console
+R2# sh ip ospf interface vlan20
+vlan20 is up
+  ifindex 9, MTU 1500 bytes, BW 0 Mbit <UP,LOWER_UP,BROADCAST,RUNNING,MULTICAST>
+  Internet Address 10.20.0.1/24, Broadcast 10.20.0.255, Area 0.0.0.0
+  MTU mismatch detection: enabled
+  Router ID 2.0.0.4, Network Type BROADCAST, Cost: 10
+  Transmit Delay is 1 sec, State DR, Priority 1
+  Designated Router (ID) 2.0.0.4 Interface Address 10.20.0.1/24
+  No backup designated router on this network
+  Multicast group memberships: <None>
+  Timer intervals configured, Hello 10s, Dead 40s, Wait 40s, Retransmit 5
+    No Hellos (Passive interface)
+  Neighbor Count is 0, Adjacent neighbor count is 0
+  Graceful Restart hello delay: 10s
+  LSA retransmissions: 0
+
+R2# sh ipv6 ospf6 interface vlan20
+vlan20 is up, type BROADCAST
+  Interface ID: 9
+  Internet Address:
+    inet : 10.20.0.1/24
+    inet6: fe80::58b7:f4ff:fe48:8a4f/64
+    inet6: fd14:ca46:3864:14::1/64
+  Instance ID 0, Interface MTU 1500 (autodetect: 1500)
+  MTU mismatch detection: enabled
+  Area ID 0.0.0.0, Cost 10
+  State DR, Transmit Delay 1 sec, Priority 1
+  Timer intervals configured:
+   No Hellos (Passive interface)
+  DR: 2.0.0.6 BDR: 0.0.0.0
+  Number of I/F scoped LSAs is 1
+    0 Pending LSAs for LSUpdate in Time 00:00:00 [thread off]
+    0 Pending LSAs for LSAck in Time 00:00:00 [thread off]
+  Graceful Restart hello delay: 10s
+  Authentication Trailer is disabled
+R2#
+```
+
+## Container Internet Reachability
+
+```console
+etu@R3:~$ for i in {0..2}
+do
+    echo ">>>>>>>>>>>>>>>>> c$i"
+    incus exec c$i -- ping -qc2 9.9.9.9
+done
+>>>>>>>>>>>>>>>>> c0
+PING 9.9.9.9 (9.9.9.9) 56(84) bytes of data.
+
+--- 9.9.9.9 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 17.721/18.047/18.373/0.326 ms
+>>>>>>>>>>>>>>>>> c1
+PING 9.9.9.9 (9.9.9.9) 56(84) bytes of data.
+
+--- 9.9.9.9 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 16.820/17.279/17.738/0.459 ms
+>>>>>>>>>>>>>>>>> c2
+PING 9.9.9.9 (9.9.9.9) 56(84) bytes of data.
+
+--- 9.9.9.9 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 16.567/16.898/17.230/0.331 ms
+```
+
+```console
+etu@R3:~$ for i in {0..2}
+do
+    echo ">>>>>>>>>>>>>>>>> c$i"
+    incus exec c$i -- ping -qc2 2620:fe::fe
+done
+>>>>>>>>>>>>>>>>> c0
+PING 2620:fe::fe (2620:fe::fe) 56 data bytes
+
+--- 2620:fe::fe ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 36.845/37.375/37.905/0.530 ms
+>>>>>>>>>>>>>>>>> c1
+PING 2620:fe::fe (2620:fe::fe) 56 data bytes
+
+--- 2620:fe::fe ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 36.574/36.882/37.190/0.308 ms
+>>>>>>>>>>>>>>>>> c2
+PING 2620:fe::fe (2620:fe::fe) 56 data bytes
+
+--- 2620:fe::fe ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 37.225/37.354/37.484/0.129 ms
+```
+
+## Container Package Updates
+
+```console
+etu@R1:~$ for i in {0..2}
+do
+    echo ">>>>>>>>>>>>>>>>> c$i"
+    incus exec c$i -- apt update
+    incus exec c$i -- apt -y full-upgrade
+done
+>>>>>>>>>>>>>>>>> c0
+Hit:1 http://deb.debian.org/debian trixie InRelease
+Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+Fetched 90.7 kB in 0s (285 kB/s)
+All packages are up to date.
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+>>>>>>>>>>>>>>>>> c1
+Hit:1 http://deb.debian.org/debian trixie InRelease
+Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+Fetched 90.7 kB in 0s (563 kB/s)
+All packages are up to date.
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+>>>>>>>>>>>>>>>>> c2
+Hit:1 http://deb.debian.org/debian trixie InRelease
+Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+Fetched 90.7 kB in 0s (559 kB/s)
+All packages are up to date.
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
+```
+
+## Hosting Routes Learned By OSPF
+
+`R2` learns the `R1` and `R3` hosting networks over OSPFv2.
+
+```console
+R2# sh ip route
+Codes: K - kernel route, C - connected, L - local, S - static,
+       R - RIP, O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+       f - OpenFabric, t - Table-Direct,
+       > - selected route, * - FIB route, q - queued, r - rejected, b - backup
+       t - trapped, o - offload failure
+
+IPv4 unicast VRF default:
+O>* 0.0.0.0/0 [110/10] via 10.44.0.1, enp0s1.440, weight 1, 04:31:25
+O>* 10.10.0.0/24 [110/20] via 10.44.0.1, enp0s1.440, weight 1, 00:48:35
+O   10.20.0.0/24 [110/10] is directly connected, vlan20, weight 1, 00:46:56
+C>* 10.20.0.0/24 is directly connected, vlan20, weight 1, 03:57:59
+L>* 10.20.0.1/32 is directly connected, vlan20, weight 1, 03:57:59
+O>* 10.30.0.0/24 [110/20] via 10.44.2.3, enp0s1.442, weight 1, 00:44:05
+C>* 10.44.0.0/29 is directly connected, enp0s1.440, weight 1, 03:57:59
+O   10.44.0.0/29 [110/10] is directly connected, enp0s1.440, weight 1, 05:12:16
+L>* 10.44.0.2/32 is directly connected, enp0s1.440, weight 1, 03:57:59
+O>* 10.44.1.0/29 [110/20] via 10.44.0.1, enp0s1.440, weight 1, 05:09:52
+  *                       via 10.44.2.3, enp0s1.442, weight 1, 05:09:52
+C>* 10.44.2.0/29 is directly connected, enp0s1.442, weight 1, 03:57:59
+O   10.44.2.0/29 [110/10] is directly connected, enp0s1.442, weight 1, 05:11:47
+L>* 10.44.2.2/32 is directly connected, enp0s1.442, weight 1, 03:57:59
+C>* 10.99.0.0/24 is directly connected, enp0s1.99, weight 1, 03:57:59
+L>* 10.99.0.2/32 is directly connected, enp0s1.99, weight 1, 03:57:59
+R2#
+```
+
+`R3` learns the `R1` and `R2` hosting IPv6 prefixes over OSPFv3.
+
+```console
+R3# sh ipv6 route
+Codes: K - kernel route, C - connected, L - local, S - static,
+       R - RIPng, O - OSPFv3, I - IS-IS, B - BGP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, F - PBR,
+       f - OpenFabric, t - Table-Direct,
+       > - selected route, * - FIB route, q - queued, r - rejected, b - backup
+       t - trapped, o - offload failure
+
+IPv6 unicast VRF default:
+O>* ::/0 [110/10] via fe80::1b9:1, enp0s1.441, weight 1, 00:44:45
+O>* fd14:ca46:3864:a::/64 [110/20] via fe80::1b9:1, enp0s1.441, weight 1, 00:48:53
+O>* fd14:ca46:3864:14::/64 [110/20] via fe80::baad:caff:fefe:3f, enp0s1.442, weight 1, 00:47:35
+O   fd14:ca46:3864:1e::/64 [110/10] is directly connected, vlan30, weight 1, 00:44:46
+C>* fd14:ca46:3864:1e::/64 is directly connected, vlan30, weight 1, 00:46:16
+K * fd14:ca46:3864:1e::/64 [0/256] is directly connected, vlan30, weight 1, 00:46:18
+L>* fd14:ca46:3864:1e::1/128 is directly connected, vlan30, weight 1, 00:46:16
+C>* fd14:ca46:3864:99::/64 is directly connected, enp0s1.99, weight 1, 00:46:18
+K * fd14:ca46:3864:99::/64 [0/256] is directly connected, enp0s1.99, weight 1, 05:55:30
+L>* fd14:ca46:3864:99::3/128 is directly connected, enp0s1.99, weight 1, 00:46:18
+C * fe80::/64 is directly connected, asw-host, weight 1, 00:46:16
+C * fe80::/64 is directly connected, vlan30, weight 1, 00:46:16
+C * fe80::/64 is directly connected, enp0s1.99, weight 1, 00:46:18
+C * fe80::/64 is directly connected, enp0s1.28, weight 1, 04:07:47
+C * fe80::/64 is directly connected, enp0s1, weight 1, 04:07:49
+C * fe80::/64 is directly connected, enp0s1.442, weight 1, 05:55:28
+C>* fe80::/64 is directly connected, enp0s1.441, weight 1, 05:55:28
+R3#
+```
+
+Targeted route checks from `R1` confirm remote hosting networks are installed through OSPF.
+
+```console
+R1# sh ip route 10.20.0.0/24
+Routing entry for 10.20.0.0/24
+  Known via "ospf", distance 110, metric 80, best
+  Last update 00:18:33 ago
+  Flags: Selected
+  Status: Installed
+  * 10.44.0.2, via enp0s1.440, weight 1
+
+R1#
+```
+
+```console
+R1# sh ipv6 route fd14:ca46:3864:1e::/64
+Routing entry for fd14:ca46:3864:1e::/64
+  Known via "ospf6", distance 110, metric 80, best
+  Last update 00:09:30 ago
+  Flags: Selected
+  Status: Installed
+  * fe80::1b9:3, via enp0s1.441, weight 1
+
+R1#
+```
+
+## Saved FRR Configurations
+
+```console
+etu@R1:~$ sudo cat /etc/frr/frr.conf
+frr version 10.6.1
+frr defaults traditional
+hostname R1
+log syslog informational
+service integrated-vtysh-config
+!
+interface enp0s1.440
+ ip ospf area 0
+ ipv6 ospf6 area 0
+exit
+!
+interface enp0s1.441
+ ip ospf area 0
+ ipv6 ospf6 area 0
+exit
+!
 interface vlan10
+ bandwidth 10000
+ ip ospf area 0
+ ip ospf passive
+ ipv6 ospf6 area 0
+ ipv6 ospf6 passive
+exit
+!
+router ospf
+ ospf router-id 1.0.0.4
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+ default-information originate
+exit
+!
+router ospf6
+ ospf6 router-id 1.0.0.6
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+ redistribute unknown
+ default-information originate
+exit
+!
+```
+
+```console
+etu@R2:~$ sudo cat /etc/frr/frr.conf
+frr version 10.6.1
+frr defaults traditional
+hostname R2
+log syslog informational
+service integrated-vtysh-config
+!
+interface enp0s1.440
  ip ospf area 0
  ipv6 ospf6 area 0
- ip ospf passive
- ipv6 ospf6 passive
-end
-
-# R2
-conf t
+exit
+!
+interface enp0s1.442
+ ip ospf area 0
+ ipv6 ospf6 area 0
+exit
+!
 interface vlan20
+ bandwidth 10000
  ip ospf area 0
- ipv6 ospf6 area 0
  ip ospf passive
+ ipv6 ospf6 area 0
  ipv6 ospf6 passive
-end
+exit
+!
+router ospf
+ ospf router-id 2.0.0.4
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+exit
+!
+router ospf6
+ ospf6 router-id 2.0.0.6
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+exit
+!
+```
 
-# R3
-conf t
-interface vlan30
+```console
+etu@R3:~$ sudo cat /etc/frr/frr.conf
+frr version 10.6.1
+frr defaults traditional
+hostname R3
+log syslog informational
+service integrated-vtysh-config
+!
+interface enp0s1.441
  ip ospf area 0
  ipv6 ospf6 area 0
+exit
+!
+interface enp0s1.442
+ ip ospf area 0
+ ipv6 ospf6 area 0
+exit
+!
+interface vlan30
+ bandwidth 10000
+ ip ospf area 0
  ip ospf passive
+ ipv6 ospf6 area 0
  ipv6 ospf6 passive
-end
+exit
+!
+router ospf
+ ospf router-id 3.0.0.4
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+exit
+!
+router ospf6
+ ospf6 router-id 3.0.0.6
+ log-adjacency-changes detail
+ auto-cost reference-bandwidth 400000
+exit
+!
 ```

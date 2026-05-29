@@ -18,14 +18,14 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 
 ### Must Have
 
-- [~] OSPFv2 and OSPFv3 routing lab using FRRouting.
+- [x] OSPFv2 and OSPFv3 routing lab using FRRouting.
 - [x] Three-router OSPF triangle with `R1`, `R2`, and `R3`.
 - [x] VLAN and TAP-based virtual topology.
-- [~] IPv4 and IPv6 routing validation.
+- [x] IPv4 and IPv6 routing validation.
 - [x] Default route advertisement from `R1`.
-- [~] Hosting VLANs behind routers.
+- [x] Hosting VLANs behind routers.
 - [ ] Failure testing with measurable convergence results.
-- [ ] Configuration backups and evidence collection.
+- [x] Configuration backups and evidence collection.
 - [ ] Clear documentation suitable for a public GitHub portfolio.
 
 ### Should Have
@@ -172,12 +172,12 @@ Goal: build the complete FRRouting-based OSPF lab before adding security and AI 
 
 Labels: `phase-1-ospf`, `network`, `config`, `evidence`
 
-Current status: TP completed through Q34. The OSPF transit triangle and default route advertisement are working. The hosting bridge/SVI step has been reached; Q35+ still covers passive OSPF publication of hosting VLANs, Incus, container tests, metrics, and final backups.
+Current status: complete. The OSPFv2/OSPFv3 transit triangle, default route advertisement, passive hosting VLAN publication, Incus container hosting networks, IPv4/IPv6 route validation, and final FRR evidence are documented.
 
 - [x] Create `R1` VM on `tap62`.
 - [x] Create `R2` VM on `tap63`.
 - [x] Create `R3` VM on `tap64`.
-- [~] Configure hostnames, SSH, console access, and initial snapshots.
+- [x] Configure hostnames, SSH, console access, and initial snapshots.
 - [x] Configure TAP trunks and VLANs.
 - [x] Configure VLAN `360` for infrastructure / default route.
 - [x] Configure VLAN `440` for `R1` to `R2`.
@@ -186,32 +186,32 @@ Current status: TP completed through Q34. The OSPF transit triangle and default 
 - [x] Configure VLANs `10`, `20`, and `30` as hosting networks.
 - [x] Configure IPv4 addressing.
 - [x] Configure IPv6 addressing.
-- [~] Enable IPv4 forwarding.
-- [~] Enable IPv6 forwarding.
+- [x] Enable IPv4 forwarding.
+- [x] Enable IPv6 forwarding.
 - [x] Install FRRouting on all routers.
 - [x] Enable `zebra`, `ospfd`, `ospf6d`, and `staticd`.
 - [x] Configure OSPFv2 in area `0`.
 - [x] Configure OSPFv3 in area `0`.
 - [x] Verify OSPF neighbors.
 - [x] Verify IPv4 routes.
-- [~] Verify IPv6 routes.
+- [x] Verify IPv6 routes.
 - [x] Configure default route on `R1`.
 - [x] Advertise default route from `R1`.
-- [ ] Configure passive interfaces for hosting VLANs.
-- [ ] Tune OSPF metrics where needed.
-- [~] Save router configurations.
-- [~] Save Netplan configurations.
+- [x] Configure passive interfaces for hosting VLANs.
+- [x] Tune OSPF metrics where needed.
+- [x] Save router configurations.
+- [x] Save Netplan configurations.
 - [x] Save OVS or switch configurations.
-- [~] Capture screenshots and command outputs as evidence.
+- [x] Capture screenshots and command outputs as evidence.
 
 Exit criteria:
 
-- [~] `R1`, `R2`, and `R3` can route IPv4 traffic.
-- [~] `R1`, `R2`, and `R3` can route IPv6 traffic.
+- [x] `R1`, `R2`, and `R3` can route IPv4 traffic.
+- [x] `R1`, `R2`, and `R3` can route IPv6 traffic.
 - [x] OSPFv2 neighbors are stable.
-- [~] OSPFv3 neighbors are stable.
+- [x] OSPFv3 neighbors are stable.
 - [x] Default route propagation works.
-- [~] Configurations and evidence are saved.
+- [x] Configurations and evidence are saved.
 
 ### M2 - Failure Testing
 
@@ -415,7 +415,7 @@ Exit criteria:
 
 The project is successful even without the stretch features if it has:
 
-- [ ] Stable OSPFv2 and OSPFv3 routing.
+- [x] Stable OSPFv2 and OSPFv3 routing.
 - [ ] Failure testing evidence.
 - [ ] Grafana dashboards.
 - [ ] Centralized logs.
