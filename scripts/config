@@ -1,0 +1,28 @@
+Host r1
+    HostName 2001:678:3fc:168::82
+    User etu
+    Port 2222
+
+Host r2
+    HostName 10.99.0.2
+    User etu
+    Port 22
+    ProxyJump r1
+
+Host r3
+    HostName 10.99.0.3
+    User etu
+    Port 22
+    ProxyJump r1
+
+Host monitoring
+    HostName 10.99.0.65
+    User etu
+    Port 22
+    ProxyJump r1
+
+Host management
+    HostName 10.99.0.66
+    User etu
+    Port 22
+    ProxyJump r1

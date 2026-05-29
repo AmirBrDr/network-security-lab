@@ -84,3 +84,60 @@ etu@R3:~$ sudo sysctl net.ipv4.ip_forward net.ipv6.conf.all.forwarding
 net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 etu@R3:~$ 
+
+sudo netplsudo netplan status
+     Online state: online
+    DNS Addresses: 127.0.0.53 (stub)
+       DNS Search: .
+
+●  1: lo ethernet UNKNOWN/UP (unmanaged)
+      MAC Address: 00:00:00:00:00:00
+        Addresses: 127.0.0.1/8
+                   ::1/128
+
+●  2: enp0s1 ethernet UP (networkd: enp0s1)
+      MAC Address: b8:ad:ca:fe:00:3e (Red Hat, Inc.)
+        Addresses: fe80::baad:caff:fefe:3e/64 (link)
+    DNS Addresses: 172.16.0.2
+                   2001:678:3fc:3::2
+           Routes: fe80::/64 metric 256
+
+●  3: enp0s1.360 vlan UP (networkd: enp0s1.360)
+      MAC Address: b8:ad:ca:fe:00:3e
+        Addresses: 192.168.104.130/29
+                   2001:678:3fc:168::82/64 (ra)
+                   2001:678:3fc:168:baad:caff:fefe:3e/64 (dynamic, ra)
+                   fe80::baad:caff:fefe:3e/64 (link)
+    DNS Addresses: 2001:678:3fc:3::2
+           Routes: default via 192.168.104.129 (static)
+                   192.168.104.128/29 from 192.168.104.130 (link)
+                   2001:678:3fc:168::/64 metric 256
+                   2001:678:3fc:168::/64 metric 512 (ra)
+                   fe80::/64 metric 256
+                   default via fe80:168::1 metric 512 (ra)
+                   default via fe80::168:1 metric 1024 (static)
+
+●  4: enp0s1.440 vlan UP (networkd: enp0s1.440)
+      MAC Address: b8:ad:ca:fe:00:3e
+        Addresses: 10.44.0.1/29
+                   fe80::baad:caff:fefe:3e/64 (link)
+                   fe80::1b8:1/64 (link)
+           Routes: 10.44.0.0/29 from 10.44.0.1 (link)
+                   fe80::/64 metric 256
+
+●  5: enp0s1.99 vlan UP (networkd: enp0s1.99)
+      MAC Address: b8:ad:ca:fe:00:3e
+        Addresses: 10.99.0.1/24
+                   fd14:ca46:3864:99::1/64
+                   fe80::baad:caff:fefe:3e/64 (link)
+           Routes: 10.99.0.0/24 from 10.99.0.1 (link)
+                   fd14:ca46:3864:99::/64 metric 256
+                   fe80::/64 metric 256
+
+●  6: enp0s1.441 vlan UP (networkd: enp0s1.441)
+      MAC Address: b8:ad:ca:fe:00:3e
+        Addresses: 10.44.1.1/29
+                   fe80::baad:caff:fefe:3e/64 (link)
+                   fe80::1b9:1/64 (link)
+           Routes: 10.44.1.0/29 from 10.44.1.1 (link)
+                   fe80::/64 metric 256
