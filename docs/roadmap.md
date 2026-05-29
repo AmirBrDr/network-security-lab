@@ -18,12 +18,12 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 
 ### Must Have
 
-- [ ] OSPFv2 and OSPFv3 routing lab using FRRouting.
-- [ ] Three-router OSPF triangle with `R1`, `R2`, and `R3`.
-- [ ] VLAN and TAP-based virtual topology.
-- [ ] IPv4 and IPv6 routing validation.
-- [ ] Default route advertisement from `R1`.
-- [ ] Hosting VLANs behind routers.
+- [~] OSPFv2 and OSPFv3 routing lab using FRRouting.
+- [x] Three-router OSPF triangle with `R1`, `R2`, and `R3`.
+- [x] VLAN and TAP-based virtual topology.
+- [~] IPv4 and IPv6 routing validation.
+- [x] Default route advertisement from `R1`.
+- [~] Hosting VLANs behind routers.
 - [ ] Failure testing with measurable convergence results.
 - [ ] Configuration backups and evidence collection.
 - [ ] Clear documentation suitable for a public GitHub portfolio.
@@ -172,44 +172,46 @@ Goal: build the complete FRRouting-based OSPF lab before adding security and AI 
 
 Labels: `phase-1-ospf`, `network`, `config`, `evidence`
 
-- [ ] Create `R1` VM on `tap62`.
-- [ ] Create `R2` VM on `tap63`.
-- [ ] Create `R3` VM on `tap64`.
-- [ ] Configure hostnames, SSH, console access, and initial snapshots.
-- [ ] Configure TAP trunks and VLANs.
-- [ ] Configure VLAN `360` for infrastructure / default route.
-- [ ] Configure VLAN `440` for `R1` to `R2`.
-- [ ] Configure VLAN `441` for `R1` to `R3`.
-- [ ] Configure VLAN `442` for `R2` to `R3`.
-- [ ] Configure VLANs `10`, `20`, and `30` as hosting networks.
-- [ ] Configure IPv4 addressing.
-- [ ] Configure IPv6 addressing.
-- [ ] Enable IPv4 forwarding.
-- [ ] Enable IPv6 forwarding.
-- [ ] Install FRRouting on all routers.
-- [ ] Enable `zebra`, `ospfd`, `ospf6d`, and `staticd`.
-- [ ] Configure OSPFv2 in area `0`.
-- [ ] Configure OSPFv3 in area `0`.
-- [ ] Verify OSPF neighbors.
-- [ ] Verify IPv4 routes.
-- [ ] Verify IPv6 routes.
-- [ ] Configure default route on `R1`.
-- [ ] Advertise default route from `R1`.
+Current status: TP completed through Q34. The OSPF transit triangle and default route advertisement are working. The hosting bridge/SVI step has been reached; Q35+ still covers passive OSPF publication of hosting VLANs, Incus, container tests, metrics, and final backups.
+
+- [x] Create `R1` VM on `tap62`.
+- [x] Create `R2` VM on `tap63`.
+- [x] Create `R3` VM on `tap64`.
+- [~] Configure hostnames, SSH, console access, and initial snapshots.
+- [x] Configure TAP trunks and VLANs.
+- [x] Configure VLAN `360` for infrastructure / default route.
+- [x] Configure VLAN `440` for `R1` to `R2`.
+- [x] Configure VLAN `441` for `R1` to `R3`.
+- [x] Configure VLAN `442` for `R2` to `R3`.
+- [x] Configure VLANs `10`, `20`, and `30` as hosting networks.
+- [x] Configure IPv4 addressing.
+- [x] Configure IPv6 addressing.
+- [~] Enable IPv4 forwarding.
+- [~] Enable IPv6 forwarding.
+- [x] Install FRRouting on all routers.
+- [x] Enable `zebra`, `ospfd`, `ospf6d`, and `staticd`.
+- [x] Configure OSPFv2 in area `0`.
+- [x] Configure OSPFv3 in area `0`.
+- [x] Verify OSPF neighbors.
+- [x] Verify IPv4 routes.
+- [~] Verify IPv6 routes.
+- [x] Configure default route on `R1`.
+- [x] Advertise default route from `R1`.
 - [ ] Configure passive interfaces for hosting VLANs.
 - [ ] Tune OSPF metrics where needed.
-- [ ] Save router configurations.
-- [ ] Save Netplan configurations.
-- [ ] Save OVS or switch configurations.
-- [ ] Capture screenshots and command outputs as evidence.
+- [~] Save router configurations.
+- [~] Save Netplan configurations.
+- [x] Save OVS or switch configurations.
+- [~] Capture screenshots and command outputs as evidence.
 
 Exit criteria:
 
-- [ ] `R1`, `R2`, and `R3` can route IPv4 traffic.
-- [ ] `R1`, `R2`, and `R3` can route IPv6 traffic.
-- [ ] OSPFv2 neighbors are stable.
-- [ ] OSPFv3 neighbors are stable.
-- [ ] Default route propagation works.
-- [ ] Configurations and evidence are saved.
+- [~] `R1`, `R2`, and `R3` can route IPv4 traffic.
+- [~] `R1`, `R2`, and `R3` can route IPv6 traffic.
+- [x] OSPFv2 neighbors are stable.
+- [~] OSPFv3 neighbors are stable.
+- [x] Default route propagation works.
+- [~] Configurations and evidence are saved.
 
 ### M2 - Failure Testing
 
