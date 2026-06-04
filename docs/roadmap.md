@@ -24,9 +24,9 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 - [x] IPv4 and IPv6 routing validation.
 - [x] Default route advertisement from `R1`.
 - [x] Hosting VLANs behind routers.
-- [ ] Failure testing with measurable convergence results.
+- [~] Failure testing with measurable convergence results.
 - [x] Configuration backups and evidence collection.
-- [ ] Clear documentation suitable for a public GitHub portfolio.
+- [~] Clear documentation suitable for a public GitHub portfolio.
 
 ### Should Have
 
@@ -219,24 +219,31 @@ Goal: prove that the network can recover from controlled failures and document t
 
 Labels: `phase-2-failure-testing`, `network`, `evidence`, `incident`
 
-- [ ] Define test scenarios.
-- [ ] Capture baseline routes, neighbors, latency, and throughput.
-- [ ] Test `R1` to `R2` link failure.
+Current status: in progress. The Phase 2 tutorial is written, and the current
+proof report in `docs/proofs-phase2.md` documents the baseline, `R1` to `R2`
+failure, OVS VLAN `440` loss, FRR restart, router reboot, latency, jitter, and
+throughput. The remaining evidence gaps are the direct `R1` to `R3` and
+`R2` to `R3` link-failure captures.
+
+- [x] Define test scenarios.
+- [x] Capture baseline routes, neighbors, latency, and throughput.
+- [x] Test `R1` to `R2` link failure.
 - [ ] Test `R1` to `R3` link failure.
 - [ ] Test `R2` to `R3` link failure.
-- [ ] Test FRR restart behavior.
-- [ ] Test router reboot behavior.
-- [ ] Measure convergence time.
-- [ ] Measure packet loss.
-- [ ] Compare before and after routing tables.
-- [ ] Save packet captures if useful.
-- [ ] Write failure testing report.
+- [x] Test OVS VLAN `440` loss on `tap62`.
+- [x] Test FRR restart behavior.
+- [x] Test router reboot behavior.
+- [~] Measure convergence time for captured scenarios.
+- [~] Measure packet loss for captured scenarios.
+- [x] Compare before and after routing tables for captured scenarios.
+- [-] Save packet captures if useful.
+- [~] Write failure testing report.
 
 Exit criteria:
 
-- [ ] Each failure scenario has evidence.
-- [ ] Convergence behavior is documented.
-- [ ] Limitations are documented honestly.
+- [~] Each captured failure scenario has evidence.
+- [~] Convergence behavior is documented.
+- [x] Limitations are documented honestly.
 
 ### M3 - Observability
 
@@ -416,7 +423,7 @@ Exit criteria:
 The project is successful even without the stretch features if it has:
 
 - [x] Stable OSPFv2 and OSPFv3 routing.
-- [ ] Failure testing evidence.
+- [~] Failure testing evidence.
 - [ ] Grafana dashboards.
 - [ ] Centralized logs.
 - [ ] Suricata alerts from controlled lab attacks.
