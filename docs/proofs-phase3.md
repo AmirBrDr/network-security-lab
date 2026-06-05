@@ -504,3 +504,140 @@ go_cpu_classes_gc_mark_assist_cpu_seconds_total 0.003985566
  etu@management  ~  
 
 
+sudo cp -a /etc/alloy/config.alloy /etc/alloy/config.alloy.bak.$(date +%Y%m%d%H%M%S) 2>/dev/null || true
+
+sudo tee /etc/alloy/config.alloy >/dev/null <<'EOF'
+loki.relabel "journal" {
+  forward_to = []
+
+  rule {
+    source_labels = ["__journal__hostname"]
+    target_label  = "host"
+  }
+
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+
+  rule {
+    source_labels = ["__journal_priority_keyword"]
+    target_label  = "level"
+  }
+}
+
+loki.source.journal "system" {
+  forward_to    = [loki.write.lab.receiver]
+  relabel_rules = loki.relabel.journal.rules
+  labels        = {
+    job  = "systemd-journal",
+    lab  = "network-security-lab",
+    node = "R1",
+  }
+}
+
+loki.write "lab" {
+  endpoint {
+    url = "http://10.99.0.66:3100/loki/api/v1/push"
+  }
+}
+EOF
+
+sudo systemctl enable --now alloy
+sudo systemctl restart alloy
+sudo systemctl status alloy --no-pager
+
+
+etu@R3  ~  journalctl -u alloy -n 50 --no-pager
+Jun 05 18:23:18 R3 systemd[1]: Started alloy.service - Vendor-agnostic OpenTelemetry Collector distribution with programmable pipelines.
+Jun 05 18:23:18 R3 systemd[1]: Stopping alloy.service - Vendor-agnostic OpenTelemetry Collector distribution with programmable pipelines...
+Jun 05 18:23:18 R3 systemd[1]: alloy.service: Deactivated successfully.
+Jun 05 18:23:18 R3 systemd[1]: Stopped alloy.service - Vendor-agnostic OpenTelemetry Collector distribution with programmable pipelines.
+Jun 05 18:23:18 R3 systemd[1]: Started alloy.service - Vendor-agnostic OpenTelemetry Collector distribution with programmable pipelines.
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892667001Z level=info boringcrypto_enabled=false
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.890884652Z level=info source=/go/pkg/mod/github.com/!kim!machine!gun/automemlimit@v0.7.5/memlimit/memlimit.go:175 msg="memory is not limited, skipping" package=github.com/KimMachineGun/automemlimit/memlimit
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892740186Z level=info msg="no peer discovery configured: both join and discover peers are empty" service=cluster
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.891897438Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:201 msg="starting complete graph evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.89276298Z level=info msg="running usage stats reporter"
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892291337Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=loki.write.lab duration=383.699µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.8923038Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=tracing duration=5.71µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892313277Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=livedebugging duration=6.776µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892488725Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=loki.relabel.journal duration=172.631µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892656216Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=loki.source.journal.system duration=164.297µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892806061Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=logging duration=146.666µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892876094Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=remotecfg duration=60.037µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.89289761Z level=info msg="applying non-TLS config to HTTP server" service=http
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892905516Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=http duration=18.116µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892919752Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=ui duration=3.613µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892932012Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=cluster duration=3.326µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892944026Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=otel duration=2.763µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892962256Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:218 msg="finished node evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 node_id=labelstore duration=10.291µs
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.892972036Z level=info source=/__w/alloy/alloy/internal/runtime/internal/controller/loader.go:205 msg="finished complete graph evaluation" controller_path=/ controller_id="" trace_id=1fc2a046b11f5f74c3f8d3c20e0955a6 duration=1.189005ms
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.89309966Z level=info source=/__w/alloy/alloy/internal/runtime/alloy.go:287 msg="scheduling loaded components and services" controller_id=""
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.893482193Z level=info msg="starting cluster node" service=cluster peers_count=0 peers="" advertise_addr=127.0.0.1:12345 minimum_cluster_size=0 minimum_size_wait_timeout=0s
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.89378922Z level=info msg="failed to register collector with remote server" service=remotecfg id=b41b5ed7-dd6f-4d60-98de-003f016a5e21 name="" err="noop client"
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.893821251Z level=info msg="peers changed" service=cluster peers_count=1 min_cluster_size=0 peers=R3
+Jun 05 18:23:18 R3 alloy[16469]: ts=2026-06-05T16:23:18.894389756Z level=info msg="now listening for http traffic" service=http addr=127.0.0.1:12345
+ etu@R3  ~  
+
+
+ etu@management  ~  curl -G -s "http://10.99.0.66:3100/loki/api/v1/labels" | jq
+curl -G -s "http://10.99.0.66:3100/loki/api/v1/label/node/values" | jq
+{
+  "status": "success",
+  "data": [
+    "host",
+    "job",
+    "lab",
+    "level",
+    "node",
+    "service_name",
+    "unit"
+  ]
+}
+{
+  "status": "success",
+  "data": [
+    "R1",
+    "R2",
+    "R3",
+    "management",
+    "monitoring"
+  ]
+}
+ etu@management  ~  
+
+
+ sudo tee /etc/grafana/provisioning/datasources/network-security-lab.yml >/dev/null <<'EOF'
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://127.0.0.1:9090
+    isDefault: true
+
+  - name: Loki
+    uid: loki
+    type: loki
+    access: proxy
+    url: http://127.0.0.1:3100
+    jsonData:
+      maxLines: 1000
+EOF
+
+sudo systemctl restart grafana-server
+
+
+ ✘ etu@management  ~  curl -s http://127.0.0.1:3000/api/health
+curl -s http://127.0.0.1:9090/-/ready
+curl -s http://127.0.0.1:3100/ready
+{
+  "database": "ok",
+  "version": "13.0.2",
+  "commit": "3fcdbc5a"
+}Prometheus Server is Ready.
+ready
+ etu@management  ~  

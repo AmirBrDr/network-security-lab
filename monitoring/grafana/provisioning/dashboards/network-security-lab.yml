@@ -1,0 +1,35 @@
+apiVersion: 1
+
+providers:
+  - name: Network Security Lab - System
+    orgId: 1
+    folder: System
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards/system
+
+  - name: Network Security Lab - Network
+    orgId: 1
+    folder: Network
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards/network
+
+  - name: Network Security Lab - Routing
+    orgId: 1
+    folder: Routing
+    type: file
+    disableDeletion: false
+    editable: true
+    allowUiUpdates: true
+    updateIntervalSeconds: 10
+    options:
+      path: /etc/grafana/provisioning/dashboards/routing
