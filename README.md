@@ -1,5 +1,9 @@
 # Network Security Lab
 
+Network Security Lab is a public portfolio project that starts with a complete OSPF routing lab and extends it into a network security observability platform.
+
+The goal is to demonstrate practical networking, Linux infrastructure, monitoring, intrusion detection, incident documentation, and local AI-assisted troubleshooting in one coherent lab.
+
 ## Project Summary
 
 This lab is built around a three-router OSPF topology using FRRouting. Once the routing foundation is stable, the project adds metrics, logs, dashboards, IDS alerts, controlled attack simulations, and a supporting local AI assistant.
@@ -21,10 +25,6 @@ The AI layer is not the core of the project. The foundation is the network: OSPF
 Phase 3 adds a Grafana observability layer on top of the OSPF lab, with
 dashboards for system health, network interface traffic, FRR service state,
 OSPF neighbor counts, and centralized Loki logs.
-
-Network Security Lab is a public portfolio project that starts with a complete OSPF routing lab and extends it into a network security observability platform.
-
-The goal is to demonstrate practical networking, Linux infrastructure, monitoring, intrusion detection, incident documentation, and local AI-assisted troubleshooting in one coherent lab.
 
 
 ## What This Project Demonstrates
