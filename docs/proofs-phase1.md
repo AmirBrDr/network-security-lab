@@ -61,6 +61,15 @@ portfolio packaging:
 | Hosted containers | OK | Incus containers run behind `R1`, `R2`, and `R3` hosting VLANs. |
 | Container reachability | OK | Captured container traffic reaches IPv4 and IPv6 internet targets. |
 
+## Screenshot Evidence
+
+These screenshots capture the initial SSH access state for the router,
+monitoring, and management VMs used during the Phase 1 build.
+
+![Router and monitoring SSH sessions](../screenshots/phase1/phase1-router-and-monitoring-ssh-sessions.png)
+
+![Management SSH session](../screenshots/phase1/phase1-management-ssh-session.png)
+
 ## Scope And Topology Summary
 
 Phase 1 proves that the base routing lab is stable enough to support later

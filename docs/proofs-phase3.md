@@ -1,3 +1,42 @@
+# Phase 3 Observability Proofs
+
+This file preserves the captured Phase 3 command output and screenshots for
+the Prometheus, Loki, Alloy, and Grafana observability stack.
+
+## Screenshot Evidence
+
+### Prometheus Validation
+
+![Prometheus query console](../screenshots/phase3/phase3-prometheus-query-console.png)
+
+![Prometheus up query across lab targets](../screenshots/phase3/phase3-prometheus-up-query.png)
+
+![Prometheus node inventory query](../screenshots/phase3/phase3-prometheus-node-inventory.png)
+
+![Prometheus memory usage query](../screenshots/phase3/phase3-prometheus-memory-usage.png)
+
+![Prometheus network traffic graph](../screenshots/phase3/phase3-prometheus-network-traffic-graph.png)
+
+![Prometheus FRR textfile age query](../screenshots/phase3/phase3-prometheus-frr-textfile-age.png)
+
+### Grafana Setup
+
+![Grafana login screen](../screenshots/phase3/phase3-grafana-login.png)
+
+![Grafana home screen](../screenshots/phase3/phase3-grafana-home.png)
+
+![Grafana Prometheus and Loki data sources](../screenshots/phase3/phase3-grafana-datasources.png)
+
+### Grafana Dashboards
+
+![Network dashboard baseline](../screenshots/phase3/phase3-network-baseline.png)
+
+![Routing dashboard baseline](../screenshots/phase3/phase3-routing-baseline.png)
+
+![System dashboard baseline](../screenshots/phase3/phase3-system-baseline.png)
+
+## Command Evidence
+
  etu@management  ~  sudo cat /etc/netplan/enp0s1.yaml
 [sudo] password for etu: 
 network:

@@ -1,14 +1,31 @@
 # Network Security Lab
 
-Network Security Lab is a public portfolio project that starts with a complete OSPF routing lab and extends it into a network security observability platform.
-
-The goal is to demonstrate practical networking, Linux infrastructure, monitoring, intrusion detection, incident documentation, and local AI-assisted troubleshooting in one coherent lab.
-
 ## Project Summary
 
 This lab is built around a three-router OSPF topology using FRRouting. Once the routing foundation is stable, the project adds metrics, logs, dashboards, IDS alerts, controlled attack simulations, and a supporting local AI assistant.
 
 The AI layer is not the core of the project. The foundation is the network: OSPF, VLANs, TAP interfaces, failure testing, observability, and security evidence.
+
+## Topology
+
+![Network security lab topology](docs/images/topology.svg)
+
+## Physical Topology
+
+![Network security lab physical topology](docs/images/physical-topology.svg)
+
+## Observability Preview
+
+![Grafana network dashboard showing lab interface traffic](screenshots/phase3/phase3-network-baseline.png)
+
+Phase 3 adds a Grafana observability layer on top of the OSPF lab, with
+dashboards for system health, network interface traffic, FRR service state,
+OSPF neighbor counts, and centralized Loki logs.
+
+Network Security Lab is a public portfolio project that starts with a complete OSPF routing lab and extends it into a network security observability platform.
+
+The goal is to demonstrate practical networking, Linux infrastructure, monitoring, intrusion detection, incident documentation, and local AI-assisted troubleshooting in one coherent lab.
+
 
 ## What This Project Demonstrates
 
@@ -24,14 +41,6 @@ The AI layer is not the core of the project. The foundation is the network: OSPF
 - Controlled security simulations inside isolated lab VMs.
 - Local AI-assisted troubleshooting with Ollama.
 - Documentation, screenshots, evidence, and portfolio packaging.
-
-## Topology
-
-![Network security lab topology](docs/images/topology.svg)
-
-## Physical Topology 
-![Network security lab physical topology](docs/images/physical-topology.svg)
-
 
 The initial topology uses three routers in an OSPF triangle:
 
@@ -126,6 +135,13 @@ Controlled scans, suspicious traffic, and brute-force simulations are only perfo
 │   ├── roadmap.md
 │   ├── server-resources.md
 │   └── tap-plan.md
+├── monitoring
+│   └── grafana
+│       ├── dashboards
+│       └── provisioning
+├── screenshots
+│   ├── phase1
+│   └── phase3
 └── LICENSE
 ```
 
