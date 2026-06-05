@@ -66,6 +66,13 @@ Reserved TAP interfaces:
 | AI backend | FastAPI |
 | Retrieval | Local RAG over docs, configs, and selected references |
 
+## Operational Resilience
+
+The lab VMs are configured to start automatically after university type 2
+hypervisor restarts, such as maintenance or update reboots. The `@reboot`
+crontab entry runs the lab startup script and logs output for troubleshooting;
+details are documented in [server resources](docs/server-resources.md).
+
 ## Roadmap
 
 The project is tracked in [docs/roadmap.md](docs/roadmap.md).
@@ -132,4 +139,3 @@ Controlled scans, suspicious traffic, and brute-force simulations are only perfo
 - [Server resources](docs/server-resources.md)
 - [AI stack](docs/ai-stack.md)
 - [OSPF lab reference](docs/ospf-lab.txt)
-

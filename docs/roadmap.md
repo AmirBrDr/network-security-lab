@@ -228,8 +228,6 @@ throughput. The remaining evidence gaps are the direct `R1` to `R3` and
 - [x] Define test scenarios.
 - [x] Capture baseline routes, neighbors, latency, and throughput.
 - [x] Test `R1` to `R2` link failure.
-- [ ] Test `R1` to `R3` link failure.
-- [ ] Test `R2` to `R3` link failure.
 - [x] Test OVS VLAN `440` loss on `tap62`.
 - [x] Test FRR restart behavior.
 - [x] Test router reboot behavior.

@@ -1,6 +1,7 @@
-# Phase 2 Proofs - Failure Simulation And Network Testing
+# Phase 2 Failure Testing Report
 
-Status: Phase 2 evidence has been consolidated into a readable proof report.
+Status: Phase 2 report complete for the captured failure scenarios. Direct
+`R1` to `R3` and `R2` to `R3` link-failure captures remain open evidence gaps.
 
 This document records the failure tests captured for the OSPF triangle built in
 Phase 1.
@@ -8,10 +9,10 @@ Phase 1.
 
 ## Executive Summary
 
-The captured tests prove that the OSPF triangle can survive a loss of the
-`R1` to `R2` transit path. When VLAN `440` was removed either from the router
-interface or from the OVS trunk, `R2` stopped using the direct path to `R1` and
-rerouted traffic through `R3`.
+The captured tests prove that the OSPF triangle can survive the tested loss of
+the `R1` to `R2` transit path. When VLAN `440` was removed either from the
+router interface or from the OVS trunk, `R2` stopped using the direct path to
+`R1` and rerouted traffic through `R3`.
 
 Key findings:
 
@@ -46,6 +47,27 @@ Key findings:
 | Latency and jitter | OK | Normal, failed, converged, and restored states were measured with timestamped ping. |
 | Throughput | OK | IPv4 and IPv6 `iperf3` results were captured before, during, and after failure. |
 
+
+## Scope And Objectives
+
+Phase 2 validates controlled failure behavior for the Phase 1 routing
+foundation. The objective is not only to show that OSPF neighbors return, but
+also to prove what happens to real traffic, next-hop selection, default routes,
+latency, and throughput during and after a failure.
+
+The report covers these captured scenarios:
+
+- baseline OSPFv2, OSPFv3, route, and container traffic validation,
+- router-side shutdown of the `R1` to `R2` transit subinterface,
+- FRR restart on `R2`,
+- full VM reboot of `R2`,
+- OVS-side loss of VLAN `440` on the `tap62` trunk,
+- latency, jitter, packet-loss, and throughput measurements around the
+  `R1` to `R2` failure path.
+
+The report does not claim full triangle failure coverage yet. The direct
+`R1` to `R3` and `R2` to `R3` link-failure captures still need to be collected
+for a completely symmetric Phase 2 evidence set.
 
 ## Test Topology
 
@@ -91,6 +113,28 @@ incus exec c0 -- ping -D -i 0.2 -c 100 10.10.0.169
 incus exec c0 -- iperf3 -c 10.10.0.169 -t 20
 incus exec c0 -- iperf3 -6 -c fd14:ca46:3864:a:1266:6aff:fe8a:f053 -t 20
 ```
+
+## Result Summary
+
+| Test | Failure trigger | Main routing result | Traffic impact | Recovery result |
+| --- | --- | --- | --- | --- |
+| Baseline | None | All expected OSPFv2 and OSPFv3 neighbors full; default routes learned from `R1`. | `0%` loss for baseline container and external pings. | Not applicable. |
+| `R1` to `R2` router-side link failure | `R2` interface `enp0s1.440` down | `R2` moved `R1` prefixes and default routes from VLAN `440` to next hop `R3` on VLAN `442`. | Path changed from `ttl=62` to `ttl=61`; performance test saw `1%` packet loss during failure. | Direct `R1` adjacency returned after `enp0s1.440` was restored. |
+| FRR restart on `R2` | `systemctl restart frr` | OSPF routes were removed during daemon restart, then adjacencies reformed. | Captured ping gap was about `5.9 s`. | FRR returned active and OSPF converged again. |
+| `R2` VM reboot | `sudo reboot` | Router disappeared, then FRR restarted automatically after boot. | Captured traffic outage to the `R2` hosting network was about `144 s`. | OSPFv2, OSPFv3, and routes returned after reboot. |
+| OVS VLAN `440` loss | Removed VLAN `440` from `tap62` trunk | `R2` again rerouted `R1` prefixes and default route through `R3`. | Route failover confirmed; exact packet-loss timing was not captured in this test. | VLAN restore returned the direct adjacency. |
+
+## Convergence And Impact Assessment
+
+| Area | Finding |
+| --- | --- |
+| Control plane | OSPF detected the tested link and VLAN failures, removed the failed adjacency, and selected the alternate path through the remaining side of the triangle. |
+| Data plane | Container traffic remained usable after convergence. The `ttl` change from `62` to `61` proves packets took one additional router hop through `R3`. |
+| Packet loss | Baseline tests showed `0%` loss. The measured failure-window ping test showed `1%` loss during `R1` to `R2` failover and `0%` loss after convergence. |
+| Latency | Average RTT increased from about `0.93 ms` in the normal topology to about `1.81 ms` after failover through `R3`. |
+| Throughput | IPv4 throughput dropped from `28.1 Gbits/sec` to `23.0 Gbits/sec`; IPv6 throughput dropped from `25.5 Gbits/sec` to `15.6 Gbits/sec` on the failed, converged path. |
+| Service restart | Restarting FRR on `R2` caused a short, expected route and adjacency interruption. The measured traffic gap was about `5.9 s`. |
+| Router reboot | A full `R2` reboot caused a much larger outage for networks behind `R2`. The captured successful-reply gap was about `144 s`. |
 
 ## Baseline Proof
 
@@ -665,3 +709,17 @@ The captured Phase 2 evidence proves that the OSPF triangle has working
 resilience for the tested `R1` to `R2` failure modes. The network detects the
 loss of VLAN `440`, moves traffic through `R3`, preserves reachability after
 convergence, and restores the direct path when the failure is repaired.
+
+Phase 2 is strong enough to support the next observability phase because it has
+a known, repeatable failure scenario: loss of VLAN `440` between `R1` and `R2`.
+That scenario can now be replayed in Phase 3 to validate Prometheus metrics,
+FRR logs, Loki queries, Grafana panels, and OSPF neighbor-loss alerts.
+
+Remaining limitations are intentionally documented:
+
+- direct `R1` to `R3` link-failure evidence is still missing,
+- direct `R2` to `R3` link-failure evidence is still missing,
+- OVS-side VLAN `440` loss has route and journal evidence, but not a precise
+  packet-loss timing capture,
+- no packet captures were saved because command output was sufficient for the
+  current failure proof.

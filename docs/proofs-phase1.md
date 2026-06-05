@@ -1,22 +1,49 @@
-# OSPF Lab Proofs
+# Phase 1 OSPF Foundation Report
 
-Status: OSPF lab completed.
+Status: Phase 1 is complete. This report summarizes the captured evidence for
+the FRRouting OSPF lab and keeps the raw command output for auditability.
 
-Current evidence coverage:
+## Executive Summary
 
-- TAP/OVS topology is present.
-- `R1`, `R2`, `R3`, `monitoring`, and `management` start on the expected TAPs.
-- Transit VLANs `440`, `441`, and `442` are reachable.
-- Transit routes are present on VLANs `440`, `441`, and `442`.
-- OSPFv2 and OSPFv3 are active on the transit VLAN interfaces.
-- `R1` advertises the IPv4 and IPv6 default routes through OSPF.
-- Hosting VLANs `10`, `20`, and `30` are advertised as passive OSPF interfaces.
-- Incus containers are running behind all three hosting VLANs.
-- Hosted containers have IPv4 and IPv6 internet reachability.
+Phase 1 built the routing foundation for the network security lab: a
+three-router FRRouting triangle with IPv4 OSPFv2, IPv6 OSPFv3, default route
+advertisement from `R1`, and passive hosting networks behind each router.
 
-Important follow-up:
+Key findings:
 
-- The older forwarding capture below shows forwarding enabled on `R1` and disabled on `R2`/`R3`. Later routing and container connectivity evidence proves the lab is working, but this command should be recaptured for a perfectly clean final evidence set.
+- The OVS/TAP topology starts the expected router, monitoring, and management
+  VMs on `tap62` through `tap66`.
+- Transit VLANs `440`, `441`, and `442` are present on the router trunks and
+  visible inside the router operating systems.
+- Each router has the expected connected transit routes and neighbor-cache
+  entries for its adjacent routers.
+- OSPFv2 is active on the transit VLAN interfaces, with one adjacent neighbor
+  on each point-to-point transit segment.
+- `R1` originates the IPv4 and IPv6 default routes; `R2` and `R3` learn those
+  default routes through OSPF.
+- Hosting VLANs `10`, `20`, and `30` are configured behind `R1`, `R2`, and
+  `R3`, and are advertised into OSPF as passive interfaces.
+- Incus containers are running behind all three hosting VLANs with IPv4 and
+  IPv6 addresses.
+- Captured traffic tests prove container reachability to IPv4 and IPv6
+  internet targets, and package update output confirms external repository
+  access from hosted containers.
+- Final FRR configurations for `R1`, `R2`, and `R3` are saved in the evidence.
+
+## Evidence Limitations
+
+The lab is complete, but a few proof captures should be cleaned up before final
+portfolio packaging:
+
+- The forwarding-state capture is older and shows forwarding enabled on `R1`
+  but disabled on `R2` and `R3`. Later route and traffic evidence proves the
+  final lab worked, but the `sysctl` output should be recaptured.
+- The first OVS trunk capture still shows temporary VLAN `28` on `tap63` and
+  `tap64`. Later router route output confirms this VLAN was not part of the
+  final transit design.
+- OSPFv3 route and default-route evidence is present. A direct
+  `show ipv6 ospf6 neighbor` capture would make the final OSPFv3 evidence set
+  cleaner.
 
 ## Evidence Index
 
@@ -28,12 +55,63 @@ Important follow-up:
 | Transit IPv6 links | OK | Link-local IPv6 routes exist on the expected transit VLANs. |
 | Neighbor cache | OK | ARP/NDP entries confirm live peers on the transit VLANs. |
 | OSPFv2 transit interfaces | OK | `show ip ospf interface` lists transit VLANs `440`, `441`, `442`. |
+| OSPFv3 routing | OK | OSPFv3 default route and remote hosting routes are installed. |
 | OSPF default route | OK | `R2` and `R3` learn `0.0.0.0/0`; OSPFv3 learns `::/0`. |
 | Hosting SVIs | OK | `vlan10`, `vlan20`, and `vlan30` are configured and advertised passively. |
 | Hosted containers | OK | Incus containers run behind `R1`, `R2`, and `R3` hosting VLANs. |
-| Container reachability | OK | Hosted containers reach IPv4 and IPv6 internet targets. |
+| Container reachability | OK | Captured container traffic reaches IPv4 and IPv6 internet targets. |
 
-## OVS And VM Startup
+## Scope And Topology Summary
+
+Phase 1 proves that the base routing lab is stable enough to support later
+failure testing, monitoring, IDS work, and AI-assisted troubleshooting.
+
+Router roles:
+
+| Node | Role | TAP | Transit VLANs | Hosting VLAN |
+| --- | --- | --- | --- | --- |
+| `R1` | Router and default route origin | `tap62` | `440`, `441` | `10` |
+| `R2` | Router | `tap63` | `440`, `442` | `20` |
+| `R3` | Router | `tap64` | `441`, `442` | `30` |
+| Monitoring VM | IDS and security monitoring | `tap65` | None | Management VLAN `99` |
+| Management VM | Observability and dashboards | `tap66` | None | Management VLAN `99` |
+
+Transit links:
+
+| Link | VLAN | IPv4 subnet | Purpose |
+| --- | ---: | --- | --- |
+| `R1` to `R2` | `440` | `10.44.0.0/29` | OSPF backbone transit |
+| `R1` to `R3` | `441` | `10.44.1.0/29` | OSPF backbone transit |
+| `R2` to `R3` | `442` | `10.44.2.0/29` | OSPF backbone transit |
+
+Hosting networks:
+
+| Router | VLAN | IPv4 prefix | IPv6 prefix |
+| --- | ---: | --- | --- |
+| `R1` | `10` | `10.10.0.0/24` | `fd14:ca46:3864:a::/64` |
+| `R2` | `20` | `10.20.0.0/24` | `fd14:ca46:3864:14::/64` |
+| `R3` | `30` | `10.30.0.0/24` | `fd14:ca46:3864:1e::/64` |
+
+## Exit Criteria Assessment
+
+| Exit criterion | Result | Evidence |
+| --- | --- | --- |
+| `R1`, `R2`, and `R3` can route IPv4 traffic. | Met | OSPFv2 routes include transit and hosting prefixes, plus container IPv4 reachability. |
+| `R1`, `R2`, and `R3` can route IPv6 traffic. | Met | OSPFv3 default route and remote hosting prefixes are installed, plus container IPv6 reachability. |
+| OSPFv2 neighbors are stable. | Met | Transit interfaces show one adjacent neighbor on each expected VLAN. |
+| OSPFv3 routing works. | Met | OSPFv3 default-route and hosting-prefix evidence is present; direct neighbor capture is a polish item. |
+| Default route propagation works. | Met | `R2` and `R3` learn IPv4 `0.0.0.0/0` and IPv6 `::/0` from `R1`. |
+| Configurations and evidence are saved. | Met | Final FRR configuration blocks for all three routers are included. |
+
+## Detailed Evidence
+
+The following sections preserve the command output used to validate the Phase 1
+foundation. Each block supports one part of the summary above.
+
+### OVS And VM Startup
+
+This proves the hypervisor switch and VM startup tooling attach each lab VM to
+the expected TAP interface before routing validation begins.
 
 ```console
 amirmahdighasemi@bob:~/vm/network-security-lab$ switch-conf.py -a switch.yaml
@@ -61,9 +139,14 @@ monitoring started on tap65, access mode, MAC b8:ad:ca:fe:00:41, console 2365
 management started on tap66, access mode, MAC b8:ad:ca:fe:00:42, console 2366
 ```
 
-Note: the first OVS capture still shows temporary VLAN `28` in the trunks for `R2` and `R3`. Later route output confirms `enp0s1.28` is no longer active inside the routers.
+Capture note: this first OVS output still shows temporary VLAN `28` on `R2`
+and `R3` trunks. Later route output confirms it was not used in the final
+transit design.
 
-## Forwarding State
+### Forwarding State
+
+This historical capture is retained because it was part of the build log. It
+should be recaptured for final portfolio polish, as noted in the limitations.
 
 ```console
 etu@R1:~$ sudo sysctl net.ipv4.ip_forward net.ipv6.conf.all.forwarding
@@ -79,9 +162,14 @@ net.ipv4.ip_forward = 0
 net.ipv6.conf.all.forwarding = 0
 ```
 
-Note: this is an older capture. The later OSPF routes and container reachability prove forwarding worked during final validation, but the `sysctl` command should be recaptured on `R2` and `R3` for the final portfolio evidence.
+Later OSPF routes and traffic tests prove the final lab forwarded traffic, but
+this exact `sysctl` output is stale.
 
-## R1 Connected Routes And Neighbors
+### R1 Connected Routes And Neighbors
+
+The next three router sections verify the local connected routes and neighbor
+cache entries. Together they prove that each router sees its expected transit
+peers at layer 3 and layer 2.
 
 ```console
 etu@R1:~$ ip route ls proto kernel
@@ -113,7 +201,7 @@ fe80::baad:caff:fefe:40 dev enp0s1.441 lladdr b8:ad:ca:fe:00:40 STALE
 192.168.104.129 dev enp0s1.360 lladdr 80:6a:00:dc:67:53 STALE
 ```
 
-## R2 Connected Routes And Neighbors
+### R2 Connected Routes And Neighbors
 
 ```console
 etu@R2:~$ ip route ls proto kernel
@@ -135,7 +223,7 @@ etu@R2:~$ ip nei ls
 fe80::baad:caff:fefe:40 dev enp0s1.442 lladdr b8:ad:ca:fe:00:40 STALE
 ```
 
-## R3 Connected Routes And Neighbors
+### R3 Connected Routes And Neighbors
 
 ```console
 etu@R3:~$ ip route ls proto kernel
@@ -157,7 +245,10 @@ etu@R3:~$ ip nei ls
 fe80::baad:caff:fefe:3f dev enp0s1.442 lladdr b8:ad:ca:fe:00:3f STALE
 ```
 
-## Management And Monitoring Neighbors
+### Management And Monitoring Neighbors
+
+The management and monitoring VMs are reachable on VLAN `99` through `R1`, which
+keeps operational access separate from the OSPF transit VLANs.
 
 ```console
 etu@management:~$ ip nei ls
@@ -171,7 +262,7 @@ fe80::baad:caff:fefe:3e dev enp0s1 lladdr b8:ad:ca:fe:00:3e router STALE
 fd14:ca46:3864:99::1 dev enp0s1 lladdr b8:ad:ca:fe:00:3e router STALE
 ```
 
-## IPv6 Multicast Reachability
+### IPv6 Multicast Reachability
 
 Expected transit interfaces:
 
@@ -211,7 +302,10 @@ ping: ff02::1%enp0s1.440: Name or service not known
 
 These failures are normal: `R2` does not have VLAN `441`, and `R3` does not have VLAN `440`.
 
-## FRR Router IDs
+### FRR Router IDs
+
+The router IDs are stable and explicit, which makes OSPF neighbor and route
+evidence easier to read across IPv4 and IPv6.
 
 ```console
 R1# sh run ospfd
@@ -245,7 +339,7 @@ router ospf6
  log-adjacency-changes detail
 ```
 
-## OSPFv2 Transit Interfaces
+### OSPFv2 Transit Interfaces
 
 This proves OSPF stays on VLANs `440`, `441`, and `442`.
 
@@ -296,7 +390,7 @@ enp0s1.442 is up
   Neighbor Count is 1, Adjacent neighbor count is 1
 ```
 
-## OSPF Default Route Propagation
+### OSPF Default Route Propagation
 
 `R1` originates the IPv6 default route as an external LSA:
 
@@ -362,7 +456,7 @@ N    10.44.2.0/29          [10] area: 0.0.0.0
                            directly attached to enp0s1.442
 ```
 
-## Hosting Bridges And SVIs
+### Hosting Bridges And SVIs
 
 The hosting networks are present behind the routers and are advertised into OSPF as passive interfaces.
 
@@ -372,7 +466,11 @@ The hosting networks are present behind the routers and are advertised into OSPF
 | `R2` | `vlan20` | `10.20.0.1/24` | `fd14:ca46:3864:14::1/64` |
 | `R3` | `vlan30` | `10.30.0.1/24` | `fd14:ca46:3864:1e::1/64` |
 
-## Incus Containers
+### Incus Containers
+
+Each router hosts three Incus containers on its local hosting VLAN. These
+containers provide real endpoints for traffic tests instead of only validating
+router control-plane state.
 
 ```console
 etu@R1:~$ incus ls
@@ -413,7 +511,7 @@ etu@R3:~$ incus ls
 +------+---------+--------------------+----------------------------------------------+-----------+-----------+
 ```
 
-## Passive OSPF Hosting Interface
+### Passive OSPF Hosting Interface
 
 `R2` shows `vlan20` advertised in OSPFv2 and OSPFv3 without forming neighbors on the hosting network.
 
@@ -456,7 +554,10 @@ vlan20 is up, type BROADCAST
 R2#
 ```
 
-## Container Internet Reachability
+### Container Internet Reachability
+
+This captured sample shows hosted containers behind `R3` reaching external IPv4
+and IPv6 test targets with `0%` packet loss.
 
 ```console
 etu@R3:~$ for i in {0..2}
@@ -510,7 +611,10 @@ PING 2620:fe::fe (2620:fe::fe) 56 data bytes
 rtt min/avg/max/mdev = 37.225/37.354/37.484/0.129 ms
 ```
 
-## Container Package Updates
+### Container Package Updates
+
+Package update output from hosted containers provides an additional practical
+reachability check against real external repositories.
 
 ```console
 etu@R1:~$ for i in {0..2}
@@ -545,7 +649,7 @@ Summary:
   Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 0
 ```
 
-## Hosting Routes Learned By OSPF
+### Hosting Routes Learned By OSPF
 
 `R2` learns the `R1` and `R3` hosting networks over OSPFv2.
 
@@ -636,7 +740,10 @@ Routing entry for fd14:ca46:3864:1e::/64
 R1#
 ```
 
-## Saved FRR Configurations
+### Saved FRR Configurations
+
+The final FRR configurations are included so the proof report links behavior
+back to the actual routing configuration on each router.
 
 ```console
 etu@R1:~$ sudo cat /etc/frr/frr.conf
@@ -760,3 +867,15 @@ router ospf6
 exit
 !
 ```
+
+## Final Conclusion
+
+The captured Phase 1 evidence proves that the base OSPF lab is operational.
+The three routers are connected through the expected VLAN/TAP topology, OSPFv2
+and OSPFv3 distribute transit, hosting, and default routes, and hosted
+containers provide real traffic endpoints behind the routers.
+
+This gives the project a stable routing foundation for Phase 2 failure testing
+and for later observability, IDS, and AI-assisted troubleshooting work. The
+remaining proof cleanup is documentation polish, not a blocker for the network
+design itself.
