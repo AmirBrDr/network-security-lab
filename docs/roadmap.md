@@ -30,9 +30,9 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 
 ### Should Have
 
-- [ ] Prometheus metrics collection.
-- [ ] Grafana dashboards.
-- [ ] Loki centralized logs.
+- [x] Prometheus metrics collection.
+- [x] Grafana dashboards.
+- [x] Loki centralized logs.
 - [ ] IDS VM on `tap65`.
 - [ ] Suricata deployment and alert collection.
 - [ ] Controlled attack simulations inside lab VMs only.
@@ -249,35 +249,39 @@ Goal: collect metrics, logs, and alerts from the lab.
 
 Labels: `phase-3-observability`, `network`, `dashboard`, `docs`
 
-- [ ] Deploy management / observability VM on `tap66`.
-- [ ] Install Prometheus.
-- [ ] Install node exporters or equivalent collectors.
-- [ ] Add router and VM scrape targets.
-- [ ] Collect CPU, RAM, disk, and uptime metrics.
-- [ ] Collect interface and bandwidth metrics.
-- [ ] Monitor FRR service state.
-- [ ] Install Loki or equivalent log storage.
-- [ ] Collect system logs.
-- [ ] Collect FRR logs.
-- [ ] Install Grafana.
-- [ ] Connect Prometheus data source.
-- [ ] Connect Loki data source.
-- [ ] Create network dashboard.
-- [ ] Create system dashboard.
-- [ ] Create OSPF dashboard or panels.
-- [ ] Configure alerts for router down.
-- [ ] Configure alerts for OSPF neighbor loss.
-- [ ] Configure alerts for high CPU, RAM, and disk.
-- [ ] Replay a network failure and confirm it appears in metrics and logs.
-- [ ] Save dashboard screenshots.
-- [ ] Document observability setup.
+Current status: complete. Prometheus, Loki, Alloy, Grafana data sources,
+Grafana dashboards, FRR textfile metrics, and Prometheus alert rules are
+documented in `docs/proofs-phase3.md`.
+
+- [x] Deploy management / observability VM on `tap66`.
+- [x] Install Prometheus.
+- [x] Install node exporters or equivalent collectors.
+- [x] Add router and VM scrape targets.
+- [x] Collect CPU, RAM, disk, and uptime metrics.
+- [x] Collect interface and bandwidth metrics.
+- [x] Monitor FRR service state.
+- [x] Install Loki or equivalent log storage.
+- [x] Collect system logs.
+- [x] Collect FRR logs.
+- [x] Install Grafana.
+- [x] Connect Prometheus data source.
+- [x] Connect Loki data source.
+- [x] Create network dashboard.
+- [x] Create system dashboard.
+- [x] Create OSPF dashboard or panels.
+- [x] Configure alerts for router down.
+- [x] Configure alerts for OSPF neighbor loss.
+- [x] Configure alerts for high CPU, RAM, and disk.
+- [x] Replay a network failure and confirm it appears in metrics and logs.
+- [x] Save dashboard screenshots.
+- [x] Document observability setup.
 
 Exit criteria:
 
-- [ ] Grafana shows useful live lab data.
-- [ ] Logs are centralized.
-- [ ] Important failures are visible.
-- [ ] Setup is documented.
+- [x] Grafana shows useful live lab data.
+- [x] Logs are centralized.
+- [x] Important failures are visible.
+- [x] Setup is documented.
 
 ### M4 - Security / IDS
 
@@ -422,8 +426,8 @@ The project is successful even without the stretch features if it has:
 
 - [x] Stable OSPFv2 and OSPFv3 routing.
 - [~] Failure testing evidence.
-- [ ] Grafana dashboards.
-- [ ] Centralized logs.
+- [x] Grafana dashboards.
+- [x] Centralized logs.
 - [ ] Suricata alerts from controlled lab attacks.
 - [ ] Clear incident reports.
 - [ ] Public documentation with screenshots and configs.

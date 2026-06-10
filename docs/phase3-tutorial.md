@@ -1240,19 +1240,21 @@ Save screenshots under `screenshots/phase3/`:
 
 | Evidence | Suggested filename |
 | --- | --- |
-| Prometheus targets all up | `phase3-prometheus-targets.png` |
+| Prometheus targets all up | `phase3-prometheus-up-query.png` |
+| Prometheus alert rules baseline | `phase3-prometheus-alerts-baseline.png` |
 | System dashboard baseline | `phase3-system-baseline.png` |
 | Network dashboard baseline | `phase3-network-baseline.png` |
 | Routing dashboard baseline | `phase3-routing-baseline.png` |
-| Loki FRR logs baseline | `phase3-loki-frr-baseline.png` |
-| OSPF neighbor loss alert | `phase3-ospf-neighbor-loss-alert.png` |
-| OSPF adjacency loss logs | `phase3-ospf-adjch-failure.png` |
+| Loki OSPF adjacency loss logs | `phase3-loki-ospf-adjacency-loss.png` |
+| OSPF neighbor loss alert | `phase3-prometheus-ospf-neighbor-loss-alert.png` |
 | Dashboard during VLAN `440` failure | `phase3-routing-vlan440-failure.png` |
-| Dashboard after recovery | `phase3-routing-recovery.png` |
+| Loki OSPF adjacency recovery logs | `phase3-loki-ospf-adjacency-recovery.png` |
+| Dashboard after recovery | `phase3-routing-vlan440-recovery.png` |
+| Prometheus alerts after recovery | `phase3-prometheus-alerts-recovered.png` |
 
 Q45. Which command outputs should be copied into the proof report?
 
-Use a future `docs/proofs-phase3.md` file and include:
+Use `docs/proofs-phase3.md` and include:
 
 ```console
 curl -s http://127.0.0.1:9090/api/v1/targets | jq '.data.activeTargets[] | {job: .labels.job, node: .labels.node, health: .health}'

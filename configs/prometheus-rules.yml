@@ -1,0 +1,90 @@
+groups:
+  - name: network-security-lab
+    rules:
+      - alert: LabNodeDown
+        expr: up{job="node"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          phase: phase-3-observability
+          dashboard: system
+        annotations:
+          summary: "Lab node {{ $labels.node }} is down"
+          description: "Prometheus cannot scrape {{ $labels.node }} at {{ $labels.instance }}."
+
+      - alert: FRRServiceDown
+        expr: frr_service_active == 0
+        for: 30s
+        labels:
+          severity: critical
+          phase: phase-3-observability
+          dashboard: routing
+        annotations:
+          summary: "FRR is down on {{ $labels.node }}"
+          description: "frr.service is not active on {{ $labels.node }}."
+
+      - alert: OSPFNeighborLoss
+        expr: frr_ospf_neighbor_full_total < 2
+        for: 30s
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: routing
+        annotations:
+          summary: "{{ $labels.protocol }} neighbor loss on {{ $labels.node }}"
+          description: "{{ $labels.node }} has fewer than two Full {{ $labels.protocol }} neighbors."
+
+      - alert: FRRTextfileStale
+        expr: time() - frr_textfile_last_success_unixtime > 60
+        for: 1m
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: routing
+        annotations:
+          summary: "FRR textfile metrics are stale on {{ $labels.node }}"
+          description: "The FRR textfile collector has not updated recently."
+
+      - alert: HighCPUUsage
+        expr: 100 * (1 - avg by (node) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 85
+        for: 5m
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: system
+        annotations:
+          summary: "High CPU usage on {{ $labels.node }}"
+          description: "CPU usage is above 85 percent for five minutes."
+
+      - alert: HighMemoryUsage
+        expr: 100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) > 90
+        for: 5m
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: system
+        annotations:
+          summary: "High memory usage on {{ $labels.node }}"
+          description: "Memory usage is above 90 percent for five minutes."
+
+      - alert: RootDiskAlmostFull
+        expr: 100 * (1 - node_filesystem_avail_bytes{mountpoint="/",fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{mountpoint="/",fstype!~"tmpfs|overlay"}) > 85
+        for: 5m
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: system
+        annotations:
+          summary: "Root disk almost full on {{ $labels.node }}"
+          description: "Root filesystem usage is above 85 percent."
+
+      - alert: InterfaceReceiveErrors
+        expr: rate(node_network_receive_errs_total{device!~"lo"}[5m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+          phase: phase-3-observability
+          dashboard: network
+        annotations:
+          summary: "Receive errors on {{ $labels.node }} {{ $labels.device }}"
+          description: "The interface is reporting receive errors."
