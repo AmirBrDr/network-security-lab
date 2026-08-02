@@ -214,4 +214,27 @@ suricata_service_active{node="monitoring"} 1
  etu@management  ~  
 
 
- 
+  etu@management  ~  promtool check rules /etc/prometheus/rules/network-security-lab.yml
+sudo systemctl reload prometheus || sudo systemctl restart prometheus
+curl -s http://127.0.0.1:9090/api/v1/rules | jq '.data.groups[].rules[] | select(.name|test("Suricata")) | {name,health,type}'
+Checking /etc/prometheus/rules/network-security-lab.yml
+  SUCCESS: 11 rules found
+
+{
+  "name": "SuricataServiceDown",
+  "health": "unknown",
+  "type": "alerting"
+}
+{
+  "name": "SuricataTextfileStale",
+  "health": "unknown",
+  "type": "alerting"
+}
+{
+  "name": "SuricataAlertObserved",
+  "health": "unknown",
+  "type": "alerting"
+}
+ etu@management  ~  
+
+
