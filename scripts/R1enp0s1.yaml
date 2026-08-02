@@ -10,6 +10,13 @@ network:
           - 172.16.0.2
           - 2001:678:3fc:3::2
 
+  openvswitch: {}
+
+  bridges:
+    asw-host:
+      openvswitch: {}
+
+
   vlans:
     # Infrastructure VLAN
     enp0s1.160:
@@ -45,3 +52,9 @@ network:
       addresses:
         - 10.99.0.1/24
         - fd14:ca46:3864:99::1/64
+    vlan10:
+      id: 10
+      link: asw-host
+      addresses:
+        - 10.10.0.1/24
+        - fd14:ca46:3864:a::1/64

@@ -10,14 +10,20 @@ network:
             - 172.16.0.2
             - 2001:678:3fc:3::2
 
+    openvswitch: {}
+
+    bridges:
+      asw-host:
+        openvswitch: {}
+
     vlans:
-      # Temporary Internet access
-      enp0s1.28:
-        id: 28
-        link: enp0s1
-        dhcp4: true
-        dhcp6: false
-        accept-ra: true
+#      # Temporary Internet access
+#      enp0s1.28:
+#        id: 28
+#        link: enp0s1
+#        dhcp4: true
+#        dhcp6: false
+#        accept-ra: true
       # R3 -> R1
       enp0s1.441:
         id: 441
@@ -39,3 +45,9 @@ network:
         addresses:
           - 10.99.0.3/24
           - fd14:ca46:3864:99::3/64
+      vlan30:
+        id: 30
+        link: asw-host
+        addresses:
+          - 10.30.0.1/24
+          - fd14:ca46:3864:1e::1/64
