@@ -238,3 +238,21 @@ Checking /etc/prometheus/rules/network-security-lab.yml
  etu@management  ~  
 
 
+
+| Router | Container | Role | IPv4 |
+| --- | --- | --- | --- |
+| `R2` | `c0` | Attacker | `10.20.0.55` |
+| `R1` | `c0` | Victim web/SSH | `10.10.0.169` |
+| `R3` | `c0` | Optional extra target | `10.30.0.30` |
+
+ATTACKER_ROUTER=R2
+ATTACKER_CONTAINER=c0
+ATTACKER_IP=10.20.0.156
+VICTIM_ROUTER=R1
+VICTIM_CONTAINER=c0
+VICTIM_IP=10.10.0.169
+
+echo "ATTACKER_IP=$ATTACKER_IP"
+echo "VICTIM_IP=$VICTIM_IP"
+
+

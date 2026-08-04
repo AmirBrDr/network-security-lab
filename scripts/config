@@ -1,5 +1,5 @@
 Host r1
-    HostName 2001:678:3fc:168::82
+    HostName 10.0.160.130
     User etu
     Port 2222
 
