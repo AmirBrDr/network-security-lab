@@ -1140,6 +1140,25 @@ EOF
 
 ## 15. Add API Authentication
 
+Every `curl` test from this point through Section 20 assumes the backend is
+already running and reachable at `127.0.0.1:8080`. Start it now, in its own
+terminal or SSH session on the Management VM, and leave it running for the
+rest of this tutorial:
+
+```console
+cd /path/to/network-security-lab/backend/phase5-ai
+. .venv/bin/activate
+uvicorn app.main:app --host 127.0.0.1 --port 8080
+```
+
+If `uvicorn` exits immediately with a `pydantic` validation error instead of
+staying up, `.env` is missing or `API_TOKEN` is not set in it — confirm you
+are running this command from inside `backend/phase5-ai`, where `.env` lives,
+and that `.env` actually has `API_TOKEN=...` set. Section 21 covers running
+this the same way in more detail, and Section 22 replaces this manual step
+with a systemd service; either is fine for now, this is only to unblock the
+tests below.
+
 Q42. How is authentication implemented?
 
 The tutorial app checks the `Authorization` header:
