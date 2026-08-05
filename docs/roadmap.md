@@ -324,12 +324,11 @@ Goal: add a local AI assistant that supports troubleshooting and incident explan
 Labels: `phase-5-ai`, `ai`, `security`, `network`
 
 - [ ] Verify Ollama on the MacBook Pro.
-- [ ] Test `qwen2.5:14b` for diagnostic explanations.
-- [ ] Test `llama3.1:8b` as a fast fallback.
-- [ ] Test `qwen2.5-coder:14b` for config and code help.
+- [ ] Test `qwen2.5-coder:7b-instruct` as the single default model for diagnostic explanations, alert/log parsing, and config help.
+- [ ] Test `llama3.2:3b` as an optional fast fallback for trivial queries.
 - [ ] Test `nomic-embed-text` for embeddings.
-- [ ] Benchmark response quality and speed.
-- [ ] Decide the default model for the assistant.
+- [ ] Benchmark response quality, speed, and resident memory (`ollama ps`) on the 18 GB MacBook Pro.
+- [ ] Confirm the single-model approach holds, or fall back to a second model only if benchmarks require it.
 - [ ] Test Mac to server connectivity.
 - [ ] Create FastAPI backend.
 - [ ] Add health endpoint.

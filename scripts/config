@@ -31,3 +31,18 @@ Host management
     LocalForward 9090 127.0.0.1:9090
     LocalForward 3100 127.0.0.1:3100
     ExitOnForwardFailure yes
+
+# Phase 5: reverse tunnel so the Management VM can reach Ollama running on
+# this Mac. Run from the Mac: ssh -N -F scripts/config management-ollama-tunnel
+# Separate from "management" above so it doesn't collide with its LocalForward
+# ports when both are open at once.
+Host management-ollama-tunnel
+    HostName 10.99.0.66
+    User etu
+    Port 22
+    ProxyJump r1
+
+    RemoteForward 11434 127.0.0.1:11434
+    ExitOnForwardFailure yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
