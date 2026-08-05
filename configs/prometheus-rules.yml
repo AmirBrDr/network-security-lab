@@ -88,3 +88,36 @@ groups:
         annotations:
           summary: "Receive errors on {{ $labels.node }} {{ $labels.device }}"
           description: "The interface is reporting receive errors."
+
+      - alert: SuricataServiceDown
+        expr: suricata_service_active == 0
+        for: 30s
+        labels:
+          severity: critical
+          phase: phase-4-security
+          dashboard: security
+        annotations:
+          summary: "Suricata is down on {{ $labels.node }}"
+          description: "suricata.service is not active on the IDS sensor."
+
+      - alert: SuricataTextfileStale
+        expr: time() - suricata_eve_last_success_unixtime > 60
+        for: 1m
+        labels:
+          severity: warning
+          phase: phase-4-security
+          dashboard: security
+        annotations:
+          summary: "Suricata textfile metrics are stale on {{ $labels.node }}"
+          description: "The Suricata textfile collector has not updated recently."
+
+      - alert: SuricataAlertObserved
+        expr: increase(suricata_eve_alert_events_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: info
+          phase: phase-4-security
+          dashboard: security
+        annotations:
+          summary: "Suricata alert observed on {{ $labels.node }}"
+          description: "Suricata recorded at least one alert in the last five minutes."

@@ -1,0 +1,6 @@
+[Unit]
+Description=Write Suricata metrics for Prometheus Node Exporter
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/lib/prometheus/suricata_textfile.sh

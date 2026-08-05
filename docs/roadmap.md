@@ -33,10 +33,10 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 - [x] Prometheus metrics collection.
 - [x] Grafana dashboards.
 - [x] Loki centralized logs.
-- [ ] IDS VM on `tap65`.
-- [ ] Suricata deployment and alert collection.
-- [ ] Controlled attack simulations inside lab VMs only.
-- [ ] Incident reports with logs, screenshots, packet captures, and conclusions.
+- [x] IDS VM on `tap65`.
+- [x] Suricata deployment and alert collection.
+- [x] Controlled attack simulations inside lab VMs only.
+- [x] Incident reports with logs, screenshots, packet captures, and conclusions.
 
 ### Nice To Have
 
@@ -289,29 +289,33 @@ Goal: add controlled security monitoring with Suricata and document reproducible
 
 Labels: `phase-4-security`, `security`, `incident`, `evidence`
 
-- [ ] Deploy monitoring / IDS VM on `tap65`.
-- [ ] Confirm which traffic the IDS VM can observe.
-- [ ] Install Suricata.
-- [ ] Configure live capture.
-- [ ] Enable JSON logging.
-- [ ] Send Suricata logs to Loki or local storage.
-- [ ] Add IDS panels in Grafana.
-- [ ] Create attacker VM or container inside the lab.
-- [ ] Create victim VM or container inside the lab.
-- [ ] Create test service targets such as web, SSH, or DNS.
-- [ ] Run controlled Nmap scan inside the lab.
-- [ ] Run controlled brute-force simulation inside the lab.
-- [ ] Generate suspicious traffic inside the lab.
-- [ ] Capture alerts, logs, screenshots, and packet evidence.
-- [ ] Tune noisy rules if needed.
-- [ ] Write incident reports.
+Current status: complete. Suricata, the OVS mirror, Alloy-to-Loki forwarding,
+Prometheus metrics and alert rules, the Grafana Security dashboard, and four
+documented incidents are captured in `docs/evidence/proofs-phase4.md`.
+
+- [x] Deploy monitoring / IDS VM on `tap65`.
+- [x] Confirm which traffic the IDS VM can observe.
+- [x] Install Suricata.
+- [x] Configure live capture.
+- [x] Enable JSON logging.
+- [x] Send Suricata logs to Loki or local storage.
+- [x] Add IDS panels in Grafana.
+- [x] Create attacker VM or container inside the lab.
+- [x] Create victim VM or container inside the lab.
+- [x] Create test service targets such as web, SSH, or DNS.
+- [x] Run controlled Nmap scan inside the lab.
+- [x] Run controlled brute-force simulation inside the lab.
+- [x] Generate suspicious traffic inside the lab.
+- [x] Capture alerts, logs, screenshots, and packet evidence.
+- [x] Tune noisy rules if needed.
+- [x] Write incident reports.
 
 Exit criteria:
 
-- [ ] Suricata detects controlled lab activity.
-- [ ] IDS alerts are visible in logs or dashboards.
-- [ ] At least two security incidents are documented.
-- [ ] No tests target systems outside the lab.
+- [x] Suricata detects controlled lab activity.
+- [x] IDS alerts are visible in logs or dashboards.
+- [x] At least two security incidents are documented.
+- [x] No tests target systems outside the lab.
 
 ### M5 - AI Support Layer
 
@@ -428,8 +432,8 @@ The project is successful even without the stretch features if it has:
 - [~] Failure testing evidence.
 - [x] Grafana dashboards.
 - [x] Centralized logs.
-- [ ] Suricata alerts from controlled lab attacks.
-- [ ] Clear incident reports.
+- [x] Suricata alerts from controlled lab attacks.
+- [x] Clear incident reports.
 - [ ] Public documentation with screenshots and configs.
 
 ## Portfolio Story

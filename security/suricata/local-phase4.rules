@@ -1,0 +1,4 @@
+alert tcp $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Phase4 TCP SYN scan candidate"; flags:S; detection_filter: track by_src, count 25, seconds 60; classtype:attempted-recon; sid:1000401; rev:1;)
+alert tcp $EXTERNAL_NET any -> $HOME_NET 22 (msg:"LOCAL Phase4 SSH connection burst"; flags:S; detection_filter: track by_src, count 5, seconds 60; classtype:attempted-recon; sid:1000402; rev:1;)
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Phase4 suspicious HTTP user agent"; flow:to_server,established; http.user_agent; content:"phase4-suspicious-curl"; nocase; classtype:policy-violation; sid:1000403; rev:1;)
+alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"LOCAL Phase4 ICMP sweep candidate"; itype:8; detection_filter: track by_src, count 10, seconds 60; classtype:attempted-recon; sid:1000404; rev:1;)

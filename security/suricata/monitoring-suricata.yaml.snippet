@@ -1,0 +1,42 @@
+# Phase 4 Suricata configuration snapshot (monitoring VM)
+#
+# This is NOT the full /etc/suricata/suricata.yaml (that file is the
+# ~94 KB Ubuntu package default with extensive inline comments, 2369
+# lines total). Only the sections changed for the network-security-lab
+# are captured here, in their position in the file, so the lab-specific
+# configuration is reviewable without committing vendor boilerplate.
+
+# --- vars: address-groups (line ~18) ---
+vars:
+  address-groups:
+    HOME_NET: "[10.10.0.0/24,10.20.0.0/24,10.30.0.0/24,10.44.0.0/29,10.44.1.0/29,10.44.2.0/29,10.99.0.0/24]"
+    EXTERNAL_NET: "any"
+
+# --- outputs: eve-log (line ~98) ---
+# filetype/filename/enabled are set; the package-default event `types`
+# list is left in place. It already includes alert, anomaly, flow,
+# http, dns, tls, and ssh among other default types, satisfying the
+# Phase 4 tutorial's EVE JSON requirement without edits.
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      # types: [alert, frame, anomaly, http, dns, tls, files, smtp, ssh, stats, flow, ...]
+      # (package defaults, unmodified)
+
+# --- af-packet: capture interface (line ~660) ---
+af-packet:
+  - interface: enp0s2
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+
+# --- rule loading (line ~2330) ---
+default-rule-path: /var/lib/suricata/rules
+
+rule-files:
+  - suricata.rules
+  - local-phase4.rules
