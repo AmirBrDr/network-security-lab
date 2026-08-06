@@ -797,3 +797,123 @@ These commands will help you to understand the nature of the alerts, their frequ
  etu@management  ~/.../backend/phase5-ai   main ●  
 
 
+ etu@management  ~/.../backend/phase5-ai   main ●  export API_TOKEN="$(grep '^API_TOKEN=' .env | cut -d= -f2-)"
+
+date -Ins
+curl -s -X POST http://127.0.0.1:8080/explain-ospf \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $API_TOKEN" \
+  -d '{"node":"R2","protocol":"ospfv2","lookback_minutes":30}' \
+  | tee /tmp/phase5-ospf-explanation.json | jq -r '.answer'
+date -Ins
+2026-08-06T17:02:41,150447437+02:00
+### Observed Evidence
+
+1. **Prometheus Query Result**:
+   - The query `frr_ospf_neighbor_full_total{node="R2",protocol="ospfv2"}` returns a value of `2`.
+   - This indicates that there are 2 OSPF neighbors in the full state on node R2.
+
+2. **Loki Query Result**:
+   - The Loki query `{job="systemd-journal", unit="frr.service"} |= "AdjChg"` returned no results.
+   - This suggests that there were no adjacency changes logged for FRR (Free Range Routing) service on node R2 during the time the query was executed.
+
+### Likely Interpretation
+
+1. **OSPF Neighbor State**:
+   - The value `2` from the Prometheus query indicates that node R2 has 2 OSPF neighbors in the full state. This means that both neighbors have established a fully functional adjacency with R2, indicating successful OSPF operation.
+
+2. **Lack of Adjacency Changes**:
+   - The absence of results in the Loki query suggests that there were no changes to the OSPF adjacencies during the time the logs were checked. This could imply that the network configuration and OSPF relationships between R2 and its neighbors have remained stable.
+
+### Missing Data
+
+1. **Detailed OSPF Neighbor Information**:
+   - The Prometheus query does not provide detailed information about each neighbor, such as their IP addresses or areas they belong to.
+   - Additional metrics like `frr_ospf_neighbor_state{node="R2",protocol="ospfv2"}` could provide more details on the state of each neighbor.
+
+2. **Time Context**:
+   - The Loki query does not specify a time range, so it is unclear over what period the absence of adjacency changes was observed.
+   - Adding a time range to the Loki query would help in understanding if this stability is consistent or temporary.
+
+### Verification Commands
+
+1. **Prometheus Metrics for OSPF Neighbors**:
+   ```sh
+   frr_ospf_neighbor_state{node="R2",protocol="ospfv2"}
+   ```
+   This command can provide more detailed information about the state of each OSPF neighbor on node R2.
+
+2. **Loki Query with Time Range**:
+   ```sh
+   {job="systemd-journal", unit="frr.service"} |= "AdjChg" | range=1h
+   ```
+   This command will search for adjacency change logs in the systemd journal for FRR service over the last hour, providing more context on network stability.
+
+3. **OSPF Database Dump**:
+   ```sh
+   show ip ospf database
+   ```
+   Running this command on node R2 can provide a detailed view of the OSPF database, including neighbor relationships and their states.
+
+4. **OSPF Adjacency Details**:
+   ```sh
+   show ip ospf interface
+   ```
+   This command will display details about each OSPF interface on node R2, including adjacency status and timers.
+2026-08-06T17:03:12,277913137+02:00
+ etu@management  ~/.../backend/phase5-ai   main ●  
+
+  etu@management  ~/.../backend/phase5-ai   main ●  curl -s -X POST http://127.0.0.1:8080/explain-alert \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $API_TOKEN" \
+  -d '{
+    "alert_name": "LOCAL Phase4 TCP SYN scan candidate",
+    "labels": {
+      "src_ip": "10.20.0.65",
+      "dest_ip": "10.10.0.169",
+      "node": "monitoring"
+    },
+    "annotations": {
+      "summary": "Controlled Nmap scan detected inside the lab"
+    }
+  }' | jq -r '.answer'
+**Observed Evidence:**
+- **Source IP:** 10.20.0.65
+- **Destination IP:** 10.10.0.169
+- **Node:** monitoring
+
+**Likely Interpretation:**
+The alert indicates that a controlled Nmap scan has been detected within the network security lab environment. Specifically, an "LOCAL Phase4 TCP SYN scan candidate" suggests that a SYN scan is being conducted on the destination IP address (10.10.0.169) from the source IP address (10.20.0.65). This type of scan is commonly used to discover open ports on a target system.
+
+**Missing Data:**
+- The exact time when the alert was generated.
+- Details about the specific ports being scanned or any other parameters of the Nmap command.
+- Information about the purpose or intent behind the scan.
+
+**Verification Commands:**
+To verify this alert and gather more details, you can use the following commands:
+
+1. **Check Nmap logs for recent activity:**
+   ```bash
+   sudo grep "Nmap" /var/log/syslog
+   ```
+
+2. **Inspect network traffic to see if SYN packets are being sent:**
+   ```bash
+   tcpdump -i eth0 src 10.20.0.65 and dst 10.10.0.169
+   ```
+
+3. **Check the destination IP's firewall logs for any related activity:**
+   ```bash
+   sudo iptables -L -v -n | grep 10.10.0.169
+   ```
+
+4. **Review system logs for any unusual activities or errors around the time of the alert:**
+   ```bash
+   sudo journalctl -xe --since "2 minutes ago"
+   ```
+
+These commands will help you gather more information about the scan, including the specific ports being targeted and any potential impact on the network.
+ etu@management  ~/.../backend/phase5-ai   main ●  
+
+
