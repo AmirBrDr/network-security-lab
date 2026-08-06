@@ -40,9 +40,9 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 
 ### Nice To Have
 
-- [ ] Local Ollama inference on the MacBook Pro.
-- [ ] FastAPI backend connecting lab data to the local model.
-- [ ] AI explanations for OSPF failures, IDS alerts, and logs.
+- [x] Local Ollama inference on the MacBook Pro.
+- [x] FastAPI backend connecting lab data to the local model.
+- [x] AI explanations for OSPF failures, IDS alerts, and logs.
 - [ ] RAG over project documentation, configs, and selected references.
 
 ### Stretch
@@ -76,7 +76,7 @@ The OSPF lab is the foundation. Observability, IDS, AI, RAG, and demo features a
 | `tap67` | Future integration | Reserved |
 | `tap68` | Future integration | Reserved |
 | `tap69` | Backup / debug / future integration | Reserved |
-| MacBook Pro M3 Pro 18 GB | Ollama / local AI inference | Planned |
+| MacBook Pro M3 Pro 18 GB | Ollama / local AI inference | Confirmed |
 | University server | VMs and networking lab | Confirmed |
 
 ## Labels
@@ -323,28 +323,32 @@ Goal: add a local AI assistant that supports troubleshooting and incident explan
 
 Labels: `phase-5-ai`, `ai`, `security`, `network`
 
-- [ ] Verify Ollama on the MacBook Pro.
-- [ ] Test `qwen2.5-coder:7b-instruct` as the single default model for diagnostic explanations, alert/log parsing, and config help.
-- [ ] Test `llama3.2:3b` as an optional fast fallback for trivial queries.
-- [ ] Test `nomic-embed-text` for embeddings.
-- [ ] Benchmark response quality, speed, and resident memory (`ollama ps`) on the 18 GB MacBook Pro.
-- [ ] Confirm the single-model approach holds, or fall back to a second model only if benchmarks require it.
-- [ ] Test Mac to server connectivity.
-- [ ] Create FastAPI backend.
-- [ ] Add health endpoint.
-- [ ] Add log explanation endpoint.
-- [ ] Add alert explanation endpoint.
-- [ ] Add OSPF failure explanation endpoint.
-- [ ] Add simple API protection.
-- [ ] Add timeouts and fallback behavior.
-- [ ] Test one full flow from lab event to AI explanation.
+Current status: complete. Ollama, the reverse SSH tunnel, the FastAPI
+backend, its systemd service, and one full OSPF and one full IDS explanation
+flow are documented in `docs/evidence/proofs-phase5.md`.
+
+- [x] Verify Ollama on the MacBook Pro.
+- [x] Test `qwen2.5-coder:7b-instruct` as the single default model for diagnostic explanations, alert/log parsing, and config help.
+- [x] Test `llama3.2:3b` as an optional fast fallback for trivial queries.
+- [x] Test `nomic-embed-text` for embeddings.
+- [x] Benchmark response quality, speed, and resident memory (`ollama ps`) on the 18 GB MacBook Pro.
+- [x] Confirm the single-model approach holds, or fall back to a second model only if benchmarks require it.
+- [x] Test Mac to server connectivity.
+- [x] Create FastAPI backend.
+- [x] Add health endpoint.
+- [x] Add log explanation endpoint.
+- [x] Add alert explanation endpoint.
+- [x] Add OSPF failure explanation endpoint.
+- [x] Add simple API protection.
+- [x] Add timeouts and fallback behavior.
+- [x] Test one full flow from lab event to AI explanation.
 
 Exit criteria:
 
-- [ ] AI can explain at least one OSPF failure.
-- [ ] AI can explain at least one IDS alert.
-- [ ] AI clearly says when evidence is missing.
-- [ ] AI feature does not block the core lab.
+- [x] AI can explain at least one OSPF failure.
+- [x] AI can explain at least one IDS alert.
+- [x] AI clearly says when evidence is missing.
+- [x] AI feature does not block the core lab.
 
 ### M6 - RAG Knowledge Layer
 

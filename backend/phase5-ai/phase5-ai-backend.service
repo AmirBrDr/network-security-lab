@@ -1,0 +1,16 @@
+[Unit]
+Description=Network Security Lab Phase 5 AI Backend
+After=network-online.target prometheus.service loki.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=etu
+WorkingDirectory=/home/etu/network-security-lab/backend/phase5-ai
+EnvironmentFile=/home/etu/network-security-lab/backend/phase5-ai/.env
+ExecStart=/home/etu/network-security-lab/backend/phase5-ai/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8080
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
